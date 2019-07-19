@@ -1,0 +1,17 @@
+{
+  "name": "cents-ideas",
+  "private": true,
+  "workspaces": {
+    "packages": [
+      "packages/*"
+    ]
+  },
+  "scripts": {
+    "build": "yarn workspaces run build",
+    "build:watch": "tsc --build --watch packages"
+  },
+  "devDependencies": {
+    "tsc": "^1.20150623.0",
+    "typescript": "^3.5.3"
+  }
+}
