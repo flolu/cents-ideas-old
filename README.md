@@ -1,1 +1,11 @@
-https://github.com/skatestyle/cents-ideas
+# Setup
+
+```
+yarn bootstrap
+```
+
+# Run
+
+```
+yarn start:dev
+```
