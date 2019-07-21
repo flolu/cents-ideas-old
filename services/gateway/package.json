@@ -4,11 +4,12 @@
   "main": "dist/index.js",
   "typings": "dist/index.d.ts",
   "license": "MIT",
-  "scripts": {
-    "build": "tsc",
-    "build:watch": "tsc --watch"
-  },
   "dependencies": {
-    "@cents-ideas/common": "1.0.0"
+    "@cents-ideas/common": "1.0.0",
+    "express": "^4.17.1"
+  },
+  "devDependencies": {
+    "@types/express": "^4.17.0",
+    "nodemon": "^1.19.1"
   }
 }

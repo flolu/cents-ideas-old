@@ -1,7 +1,8 @@
 version: '3'
 services:
   gateway:
-    volumes:
-      #- ./packages/gateway/dist:/usr/app/src/dist/
-      - /node_modules
-    build: ./packages/gateway
+    build:
+      context: ./
+      dockerfile: ./docker-images/Gateway.Dockerfile
+    ports:
+      - 3000:3000

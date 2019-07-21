@@ -4,7 +4,7 @@
 yarn bootstrap
 ```
 
-# Run
+# Run locally
 
 ```
 yarn start:dev

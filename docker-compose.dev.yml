@@ -1,0 +1,11 @@
+version: '3'
+services:
+  gateway:
+    build:
+      context: ./
+      dockerfile: ./docker-images/Gateway.dev.Dockerfile
+    volumes:
+      - ./services:/usr/app/src/services/
+      - ./packages:/usr/app/src/packages/
+    ports:
+      - 3000:3000
