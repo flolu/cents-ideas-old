@@ -1,0 +1,19 @@
+{
+  "name": "@cents-ideas/ideas",
+  "version": "1.0.0",
+  "main": "dist/index.js",
+  "typings": "dist/index.d.ts",
+  "license": "MIT",
+  "scripts": {
+    "start": "node dist",
+    "start:dev": "nodemon dist"
+  },
+  "dependencies": {
+    "@cents-ideas/common": "1.0.0",
+    "express": "^4.17.1"
+  },
+  "devDependencies": {
+    "@types/express": "^4.17.0",
+    "nodemon": "^1.19.1"
+  }
+}
