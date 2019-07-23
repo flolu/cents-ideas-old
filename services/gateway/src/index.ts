@@ -5,14 +5,15 @@ const port: number = 3000;
 const app = express();
 
 app.use('**', (_req, res) => {
-  res.send(inventedBy);
+  res.send('Gateway');
 });
 
 app.listen(port, () => {
+  console.log('Gateway listening on port', port);
   console.log(
-    'CENTS means: ',
+    'CENTS means ',
     centsMeaning,
-    ' and it was invented by',
+    ' and was invented by ',
     inventedBy
   );
 });

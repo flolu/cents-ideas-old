@@ -1,0 +1,4 @@
+{
+  "files": [],
+  "references": [{ "path": "packages/common" }, { "path": "services/ideas" }]
+}

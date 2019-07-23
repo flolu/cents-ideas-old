@@ -3,6 +3,12 @@ services:
   gateway:
     build:
       context: ./
-      dockerfile: ./docker-images/Gateway.Dockerfile
+      dockerfile: ./docker-images/gateway/Gateway.Dockerfile
     ports:
       - 3000:3000
+  ideas:
+    build:
+      context: ./
+      dockerfile: ./docker-images/ideas/Ideas.Dockerfile
+    ports:
+      - 3001:3001
