@@ -1,8 +1,5 @@
-export const centsMeaning: string[] = [
-  'Control',
-  'Entry',
-  'Need',
-  'Time',
-  'Scale'
-];
-export const inventedBy: string = 'Mj Demarco';
+const centsMeaning: string[] = ['Control', 'Entry', 'Need', 'Time', 'Scale'];
+const inventedBy: string = 'Mj Demarco';
+
+export { centsMeaning, inventedBy };
+export * from './utils';
