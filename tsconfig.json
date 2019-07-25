@@ -1,7 +1,7 @@
 {
   "files": [],
   "references": [
-    { "path": "packages/common" },
+    { "path": "packages/utils" },
     { "path": "services/gateway" },
     { "path": "services/ideas" }
   ]

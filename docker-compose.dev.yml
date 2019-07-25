@@ -7,7 +7,7 @@ services:
       dockerfile: ./docker-images/gateway/Gateway.dev.Dockerfile
     volumes:
       - ./services/gateway/dist:/usr/app/src/services/gateway/dist
-      - ./packages/common/dist:/usr/app/src/packages/common/dist
+      - ./packages/utils/dist:/usr/app/src/packages/utils/dist
       - ./node_modules:/usr/app/src/node_modules
     ports:
       - 3000:3000
@@ -18,7 +18,7 @@ services:
       dockerfile: ./docker-images/ideas/Ideas.dev.Dockerfile
     volumes:
       - ./services/ideas/dist:/usr/app/src/services/ideas/dist
-      - ./packages/common/dist:/usr/app/src/packages/common/dist
+      - ./packages/utils/dist:/usr/app/src/packages/utils/dist
       - ./node_modules:/usr/app/src/node_modules
     ports:
       - 3001:3001

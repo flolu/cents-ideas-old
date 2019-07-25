@@ -1,4 +1,4 @@
-import { makeUniqueId, isIdValid, sanitizeText } from '@cents-ideas/common';
+import { makeUniqueId, isIdValid, sanitizeText } from '@cents-ideas/utils';
 import buildMakeIdea from './idea.entity';
 import { MakeIdea } from './idea.types';
 

@@ -1,4 +1,4 @@
-import { MakeUniqueId, IsValidId, SanitizeText } from '@cents-ideas/common';
+import { MakeUniqueId, IsValidId, SanitizeText } from '@cents-ideas/utils';
 
 interface Idea {
   id: string;

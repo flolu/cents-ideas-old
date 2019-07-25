@@ -2,7 +2,7 @@ FROM node:lts-alpine
 
 WORKDIR /usr/app/src
 
-COPY ./packages/common ./packages/common
+COPY ./packages/utils ./packages/utils
 COPY ./services/ideas ./services/ideas
 
 COPY package.json .
