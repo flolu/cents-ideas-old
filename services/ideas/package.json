@@ -6,14 +6,21 @@
   "license": "MIT",
   "scripts": {
     "start": "node dist",
-    "start:dev": "nodemon dist"
+    "start:dev": "nodemon dist",
+    "test": "jest",
+    "test:watch": "jest --watch"
   },
   "dependencies": {
-    "@cents-ideas/common": "1.0.0",
-    "express": "^4.17.1"
+    "@cents-ideas/utils": "1.0.0",
+    "express": "^4.17.1",
+    "faker": "^4.1.0"
   },
   "devDependencies": {
     "@types/express": "^4.17.0",
-    "nodemon": "^1.19.1"
+    "@types/faker": "^4.1.5",
+    "@types/jest": "^24.0.15",
+    "jest": "^24.8.0",
+    "nodemon": "^1.19.1",
+    "ts-jest": "^24.0.2"
   }
 }

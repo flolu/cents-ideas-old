@@ -6,10 +6,11 @@
   "license": "MIT",
   "scripts": {
     "start": "node dist",
-    "start:dev": "nodemon dist"
+    "start:dev": "nodemon dist",
+    "test": "echo gateway has no tests"
   },
   "dependencies": {
-    "@cents-ideas/common": "1.0.0",
+    "@cents-ideas/utils": "1.0.0",
     "express": "^4.17.1"
   },
   "devDependencies": {
