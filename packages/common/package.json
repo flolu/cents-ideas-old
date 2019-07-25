@@ -4,6 +4,9 @@
   "main": "dist/index.js",
   "typings": "dist/index.d.ts",
   "license": "MIT",
+  "scripts": {
+    "test": "echo common has no tests"
+  },
   "dependencies": {
     "sanitize-html": "^1.20.1",
     "shortid": "^2.2.14"

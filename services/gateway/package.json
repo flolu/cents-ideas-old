@@ -6,7 +6,8 @@
   "license": "MIT",
   "scripts": {
     "start": "node dist",
-    "start:dev": "nodemon dist"
+    "start:dev": "nodemon dist",
+    "test": "echo gateway has no tests"
   },
   "dependencies": {
     "@cents-ideas/common": "1.0.0",

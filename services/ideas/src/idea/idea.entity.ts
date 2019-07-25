@@ -1,6 +1,6 @@
 import { BuildMakeIdea, BuildMakeIdeaPayload, MakeIdea } from './idea.types';
 
-enum IdeaErrors {
+export enum IdeaErrors {
   IdRequired = 'Idea must have an id',
   IdInvalid = 'Idea must have a valid id',
   UserIdRequired = 'Idea must have a user',
