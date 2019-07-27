@@ -5,3 +5,6 @@ lib
 dist
 node_modules
 yarn-error.log
+.env.dev
+.env.prod
+.env.test

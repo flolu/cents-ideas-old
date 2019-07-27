@@ -1,34 +1,27 @@
-import { InsertOneWriteOpResult, Db } from 'mongodb';
-import { Idea, MakeUniqueId } from '../idea/idea.types';
+import { Db, InsertOneWriteOpResult } from 'mongodb';
+import { MakeIdeasDatabase, InsertIdea } from './ideas-database.types';
 
-export default class IdeasDatabase {
-  readonly COLLECTION: string = 'ideas';
+const makeIdeasDatabase: MakeIdeasDatabase = ({
+  makeDatabase,
+  makeUniqueId
+}) => {
+  const COLLECTION: string = 'ideas';
 
-  private database: Db = this.makeDatabase();
-
-  constructor(private makeDatabase: any, private makeId: MakeUniqueId) {}
-
-  public async insert({
-    id: _id = this.makeId(),
+  const insertIdea: InsertIdea = async ({
+    id: _id = makeUniqueId(),
     ...payload
-  }: Idea): Promise<Idea> {
-    this.ensureDatabaseIsInitiated();
-    const result: InsertOneWriteOpResult = await this.database
-      .collection(this.COLLECTION)
+  }) => {
+    const database: Db = await makeDatabase();
+    const result: InsertOneWriteOpResult = await database
+      .collection(COLLECTION)
       .insertOne({ _id, ...payload });
     const { _id: id, ...inserted } = result.ops[0];
     return { id, ...inserted };
-  }
+  };
 
-  private async ensureDatabaseIsInitiated(): Promise<any> {
-    try {
-      if (!this.database) {
-        this.database = await this.makeDatabase();
-        return;
-      }
-      return;
-    } catch (error) {
-      throw new Error(`Connection to ideas database couldn't be established`);
-    }
-  }
-}
+  return Object.freeze({
+    insertIdea
+  });
+};
+
+export default makeIdeasDatabase;
