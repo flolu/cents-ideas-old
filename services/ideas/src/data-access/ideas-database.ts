@@ -1,11 +1,12 @@
 import { Db, InsertOneWriteOpResult } from 'mongodb';
 import { MakeIdeasDatabase, InsertIdea } from './ideas-database.types';
+import { databaseConfig } from '../config';
 
 const makeIdeasDatabase: MakeIdeasDatabase = ({
   makeDatabase,
   makeUniqueId
 }) => {
-  const COLLECTION: string = 'ideas';
+  const COLLECTION: string = databaseConfig.ideasCollection;
 
   const insertIdea: InsertIdea = async ({
     id: _id = makeUniqueId(),
