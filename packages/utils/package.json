@@ -8,6 +8,7 @@
     "test": "echo utils has no tests"
   },
   "dependencies": {
+    "express": "^4.17.1",
     "sanitize-html": "^1.20.1",
     "shortid": "^2.2.14"
   },

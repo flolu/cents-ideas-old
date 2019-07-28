@@ -25,5 +25,5 @@ export {
   BuildMakeIdea,
   IsValidId,
   MakeUniqueId,
-  SanitizeText as Sanitize
+  SanitizeText
 };
