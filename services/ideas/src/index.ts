@@ -22,7 +22,7 @@ app.use('**', (_req, res) => {
     title: 'title',
     description: 'description'
   });
-  res.send(JSON.stringify(idea));
+  res.send('test: ' + JSON.stringify(idea));
 });
 
 app.listen(port, () => {

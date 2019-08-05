@@ -4,7 +4,7 @@ services:
     container_name: gateway
     build:
       context: ./
-      dockerfile: ./docker-images/gateway/Gateway.dev.Dockerfile
+      dockerfile: ./docker-images/dev/gateway/Gateway.Dockerfile
     volumes:
       - ./services/gateway/dist:/usr/app/src/services/gateway/dist
       - ./packages/utils/dist:/usr/app/src/packages/utils/dist
@@ -15,7 +15,7 @@ services:
     container_name: ideas
     build:
       context: ./
-      dockerfile: ./docker-images/ideas/Ideas.dev.Dockerfile
+      dockerfile: ./docker-images/dev/ideas/Ideas.Dockerfile
     volumes:
       - ./services/ideas/dist:/usr/app/src/services/ideas/dist
       - ./packages/utils/dist:/usr/app/src/packages/utils/dist

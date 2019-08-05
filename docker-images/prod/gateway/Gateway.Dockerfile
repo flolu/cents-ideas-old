@@ -6,7 +6,7 @@ COPY ./packages/utils ./packages/utils
 COPY ./services/gateway ./services/gateway
 
 COPY package.json .
-COPY ./docker-images/gateway/tsconfig.json ./
+COPY ./docker-images/prod/gateway/tsconfig.json ./
 COPY ./tsconfig.settings.json ./
 
 RUN yarn bootstrap

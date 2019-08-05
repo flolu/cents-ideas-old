@@ -1,0 +1,20 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ideas-service
+spec:
+  selector:
+    matchLabels:
+      app: ideas-service
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: ideas-service
+    spec:
+      containers:
+        - name: ideas-service
+          image: flolu/cents-ideas-ideas
+          env:
+          - name: IDEAS_SERVICE_DATABASE_URL
+            value: ""
