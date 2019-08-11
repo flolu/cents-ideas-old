@@ -3,17 +3,17 @@ services:
   gateway:
     build:
       context: ./
-      dockerfile: ./docker-images/prod/gateway/Gateway.Dockerfile
+      dockerfile: ./docker-images/production/gateway/Gateway.Dockerfile
     ports:
       - 3000:3000
-    env_file: ./env/.env.prod
+    env_file: ./env/.env.production
   ideas:
     build:
       context: ./
-      dockerfile: ./docker-images/prod/ideas/Ideas.Dockerfile
+      dockerfile: ./docker-images/production/ideas/Ideas.Dockerfile
     ports:
       - 3001:3001
-    env_file: ./env/.env.prod
+    env_file: ./env/.env.production
   ideas-db:
     image: mongo:4.0
     ports:
