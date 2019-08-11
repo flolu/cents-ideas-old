@@ -1,30 +1,29 @@
-import { HttpRequest, HttpResponse } from '@cents-ideas/utils';
+import { HttpRequest, HttpResponse, makeHttpRequest } from '@cents-ideas/utils';
 import * as express from 'express';
 import { createIdea } from './controllers';
-import makeIdea from './idea';
 import makeFakeIdea from './test/idea.mock';
 
-const port: number = 3001;
+const port: number = 3000;
 const app = express();
 
-app.get('/create', async (req, res) => {
-  const request: HttpRequest = {
-    ...req,
-    body: makeFakeIdea()
-  };
+app.post('/', async (req, res) => {
+  console.log('create idea');
+  req.body = makeFakeIdea();
+  const request: HttpRequest = makeHttpRequest({ request: req });
   const response: HttpResponse = await createIdea(request);
-  res.send('created fake idea...' + JSON.stringify(response.body));
+  console.log('created ideas, response:', response);
+  res.json(response);
 });
 
 app.use('**', (_req, res) => {
-  const idea = makeIdea({
-    userId: 'mock-user-id',
-    title: 'title',
-    description: 'description'
-  });
-  res.send('test: ' + JSON.stringify(idea));
+  res.send('ideas service');
+});
+
+app.use((err: Error, _req: express.Request, res: express.Response) => {
+  console.error(err.stack);
+  res.status(500).send('something went wrong');
 });
 
 app.listen(port, () => {
-  console.log('Ideas service listening on port ', port);
+  console.log('ideas service listening on port ', port);
 });

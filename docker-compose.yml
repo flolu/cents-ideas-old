@@ -6,9 +6,15 @@ services:
       dockerfile: ./docker-images/prod/gateway/Gateway.Dockerfile
     ports:
       - 3000:3000
+    env_file: ./env/.env.prod
   ideas:
     build:
       context: ./
       dockerfile: ./docker-images/prod/ideas/Ideas.Dockerfile
     ports:
       - 3001:3001
+    env_file: ./env/.env.prod
+  ideas-db:
+    image: mongo:4.0
+    ports:
+      - 27017:27017
