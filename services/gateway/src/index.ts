@@ -1,22 +1,41 @@
 import * as express from 'express';
-import axios from 'axios';
 
-import { HttpResponse } from '@cents-ideas/utils';
+import {
+  HttpResponse,
+  HttpRequest,
+  makeHttpRequest,
+  expressResponseHandler,
+  HttpClient
+} from '@cents-ideas/utils';
 
+/* class Gateway {
+  public app: express.Application;
+
+  public static bootstrap = (): Gateway => new Gateway();
+
+  constructor() {
+    this.app = express();
+    this._configureRoutes();
+  }
+
+  private _configureRoutes = () => {
+    let router: express.Router = express.Router();
+
+    this.app.use(router);
+  };
+}
+ */
 const port: number = 3000;
 const app = express();
+const httpClient = new HttpClient();
+
+const { IDEAS_SERVICE_HOST } = process.env;
+const IDEAS_URL: string = `http://${IDEAS_SERVICE_HOST}`;
 
 app.get('/ideas/create', async (req, res) => {
-  console.log('create idea');
-  const { IDEAS_SERVICE_HOST } = process.env;
-  console.log('ideas service host: ', IDEAS_SERVICE_HOST);
-  const response: HttpResponse = (await axios.post(`http://${IDEAS_SERVICE_HOST}`, req.body)).data;
-  console.log('created idea, response:', response);
-  if (response.headers) {
-    res.set(response.headers);
-  }
-  res.type('json');
-  res.status(response.statusCode).send(response.body);
+  const request: HttpRequest = makeHttpRequest({ request: req });
+  const httpResponse: HttpResponse = await httpClient.post(IDEAS_URL, request.body);
+  expressResponseHandler({ res, httpResponse });
 });
 
 app.use('**', (_req, res) => {

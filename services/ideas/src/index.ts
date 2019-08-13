@@ -7,11 +7,10 @@ const port: number = 3000;
 const app = express();
 
 app.post('/', async (req, res) => {
-  console.log('create idea');
+  // TODO remove this soon
   req.body = makeFakeIdea();
   const request: HttpRequest = makeHttpRequest({ request: req });
   const response: HttpResponse = await createIdea(request);
-  console.log('created ideas, response:', response);
   res.json(response);
 });
 
