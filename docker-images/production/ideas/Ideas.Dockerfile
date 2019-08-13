@@ -6,7 +6,7 @@ COPY ./packages/utils ./packages/utils
 COPY ./services/ideas ./services/ideas
 
 COPY package.json .
-COPY ./docker-images/ideas/tsconfig.json ./
+COPY ./docker-images/prod/ideas/tsconfig.json ./
 COPY ./tsconfig.settings.json ./
 
 RUN yarn bootstrap
