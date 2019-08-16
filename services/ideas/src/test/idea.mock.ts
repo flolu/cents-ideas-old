@@ -1,6 +1,7 @@
 import * as faker from 'faker';
+
 import { makeUniqueId } from '@cents-ideas/utils';
-import { Idea } from '../idea/idea.types';
+import { Idea } from '@cents-ideas/types';
 
 const makeFakeIdea = (overrides: Partial<Idea> = {}): Idea => {
   const idea: Idea = {
