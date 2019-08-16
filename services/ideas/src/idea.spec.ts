@@ -1,10 +1,10 @@
 import * as faker from 'faker';
 
 import { Idea } from '@cents-ideas/types';
-import makeFakeIdea from './idea.mock';
-import makeIdea, { IdeaErrors } from '../idea';
+import makeFakeIdea from './test/idea.mock';
+import makeIdea, { IdeaErrors } from './idea';
 
-describe('idea', () => {
+describe('Idea', () => {
   it('must have an id', () => {
     const noId: Idea = makeFakeIdea({ id: undefined });
     const fake: Idea = makeIdea(noId);

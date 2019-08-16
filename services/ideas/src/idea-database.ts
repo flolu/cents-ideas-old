@@ -1,14 +1,13 @@
 import { MongoClient, Db, InsertOneWriteOpResult } from 'mongodb';
 import { Idea } from '@cents-ideas/types';
+import { env } from './environment';
 
 export class IdeaDatabase {
-  private readonly DATABASE_NAME: string = 'development';
-  private readonly COLLECTION_NAME: string = 'ideas';
-  private readonly DATABASE_URL: string = 'mongodb://ideas-db:27017';
+  private readonly COLLECTION_NAME: string = env.database.ideasCollectionName;
 
-  private client: MongoClient = new MongoClient(this.DATABASE_URL, { useNewUrlParser: true });
+  private client: MongoClient = new MongoClient(this.url, { useNewUrlParser: true });
 
-  constructor() {
+  constructor(private name: string = env.database.name, private url: string = env.database.url) {
     this.client.connect();
   }
 
@@ -16,7 +15,19 @@ export class IdeaDatabase {
     if (!this.client.isConnected()) {
       await this.client.connect();
     }
-    return this.client.db(this.DATABASE_NAME);
+    return this.client.db(this.name);
+  };
+
+  public closeConnection = async () => {
+    await this.client.close();
+  };
+
+  public clearDatabase = async () => {
+    await this.client
+      .db(this.name)
+      .collection(this.COLLECTION_NAME)
+      .deleteMany({});
+    return true;
   };
 
   public insert = async ({ id: _id, ...payload }: Idea): Promise<Idea> => {

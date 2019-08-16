@@ -4,6 +4,9 @@ export const env = {
   isDevelopment: process.env.NODE_ENV === 'development',
   isTest: process.env.NODE_ENV === 'test',
   database: {
-    ideasCollectionName: 'ideas'
-  }
+    ideasCollectionName: 'ideas',
+    url: process.env.IDEAS_SERVICE_DATABASE_URL || 'mongodb://ideas-db:27017',
+    name: process.env.NODE_ENV || 'test'
+  },
+  port: 3000
 };

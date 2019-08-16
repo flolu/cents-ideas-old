@@ -6,8 +6,9 @@ import { IdeaDatabase } from './idea-database';
 import makeIdea from './idea';
 import { HttpRequest } from '@cents-ideas/types';
 import bodyParser = require('body-parser');
+import { env } from './environment';
 
-const port: number = 3000;
+const port: number = env.port;
 const app = express();
 
 const database = new IdeaDatabase();

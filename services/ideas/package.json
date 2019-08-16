@@ -7,8 +7,8 @@
   "scripts": {
     "start": "node dist",
     "start:dev": "nodemon dist",
-    "test": "jest",
-    "test:watch": "jest --watch"
+    "test": "jest --silent",
+    "test:watch": "jest --watch --silent"
   },
   "dependencies": {
     "@cents-ideas/types": "1.0.0",
