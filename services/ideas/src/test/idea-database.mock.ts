@@ -1,7 +1,7 @@
 import { MongoClient, Db } from 'mongodb';
-import { databaseConfig } from '../config';
+import { env } from '../environment';
 
-const COLLECTION: string = databaseConfig.ideasCollection;
+const COLLECTION: string = env.database.ideasCollectionName;
 let connection: MongoClient, db: Db;
 
 const makeFakeIdeaDatabase = async () => {
