@@ -1,10 +1,10 @@
 import * as faker from 'faker';
-import makeFakeIdea from '../test/idea.mock';
-import makeIdea from './';
-import { IdeaErrors } from './idea.entity';
-import { Idea } from './idea.types';
 
-describe('idea', () => {
+import { Idea } from '@cents-ideas/types';
+import makeFakeIdea from './test/idea.mock';
+import makeIdea, { IdeaErrors } from './idea';
+
+describe('Idea', () => {
   it('must have an id', () => {
     const noId: Idea = makeFakeIdea({ id: undefined });
     const fake: Idea = makeIdea(noId);
@@ -37,16 +37,13 @@ describe('idea', () => {
     const saneText: string = 'This is a totally fine title 👌👍';
     const insaneText: string = `<script>insane title 👹</script>`;
     const okayText: string = 'This title is okay 😜';
-    const totallyInsaneText: string =
-      '<script>totally insane title 👹</script>';
+    const totallyInsaneText: string = '<script>totally insane title 👹</script>';
     const sane = makeIdea(makeFakeIdea({ title: saneText }));
     const insane = makeIdea(makeFakeIdea({ title: insaneText + okayText }));
     const totallyInsane = makeFakeIdea({ title: totallyInsaneText });
     expect(sane.title).toBe(saneText);
     expect(insane.title).toBe(okayText);
-    expect(() => makeIdea(totallyInsane)).toThrow(
-      IdeaErrors.TitleSanitizedInvalid
-    );
+    expect(() => makeIdea(totallyInsane)).toThrow(IdeaErrors.TitleSanitizedInvalid);
   });
 
   it('must have a description', () => {
@@ -63,18 +60,13 @@ describe('idea', () => {
     const saneText: string = 'This is a totally fine description 👌👍';
     const insaneText: string = `<script>insane description 👹</script>`;
     const okayText: string = 'This description is okay 😜';
-    const totallyInsaneText: string =
-      '<script>totally insane description 👹</script>';
+    const totallyInsaneText: string = '<script>totally insane description 👹</script>';
     const sane = makeIdea(makeFakeIdea({ description: saneText }));
-    const insane = makeIdea(
-      makeFakeIdea({ description: insaneText + okayText })
-    );
+    const insane = makeIdea(makeFakeIdea({ description: insaneText + okayText }));
     const totallyInsane = makeFakeIdea({ description: totallyInsaneText });
     expect(sane.description).toBe(saneText);
     expect(insane.description).toBe(okayText);
-    expect(() => makeIdea(totallyInsane)).toThrow(
-      IdeaErrors.DescriptionSanitizedInvalid
-    );
+    expect(() => makeIdea(totallyInsane)).toThrow(IdeaErrors.DescriptionSanitizedInvalid);
   });
 
   it('has a created at date in UTC', () => {

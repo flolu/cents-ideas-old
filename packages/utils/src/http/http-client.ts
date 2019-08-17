@@ -7,15 +7,11 @@ export class HttpClient {
     return this._transformAxiosToHttpResponse(response);
   };
 
-  private _transformAxiosToHttpResponse = ({
-    data,
-    status,
-    headers
-  }: AxiosResponse): HttpResponse => {
+  private _transformAxiosToHttpResponse = ({ data }: AxiosResponse): HttpResponse => {
     return {
-      body: data,
-      statusCode: status,
-      headers: headers
+      body: data.body,
+      statusCode: data.status,
+      headers: data.headers
     };
   };
 }

@@ -2,6 +2,7 @@
   "files": [],
   "references": [
     { "path": "packages/utils" },
+    { "path": "packages/types" },
     { "path": "services/gateway" },
     { "path": "services/ideas" }
   ]
