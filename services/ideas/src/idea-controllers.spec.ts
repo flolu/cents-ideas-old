@@ -28,9 +28,10 @@ describe('IdeaController', () => {
     it('successfully creates an idea', async () => {
       const idea: Idea = makeFakeIdea();
       const request: HttpRequest = { body: idea };
-      const expected: HttpResponse = {
+      const expected: HttpResponse<{ created: Idea }> = {
         body: { created: idea },
-        status: HttpStatusCodes.CREATED
+        status: HttpStatusCodes.CREATED,
+        error: false
       };
       const actual: HttpResponse = await controller.create(request);
       expect(actual).toEqual(expected);

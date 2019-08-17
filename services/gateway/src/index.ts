@@ -8,15 +8,25 @@ import {
   expressResponseHandler,
   HttpClient
 } from '@cents-ideas/utils';
+import { MessageQueue } from '@cents-ideas/utils';
 
 const port: number = 3000;
 const app = express();
 const httpClient = new HttpClient();
 
+const mq = new MessageQueue();
 const { IDEAS_SERVICE_HOST } = process.env;
 const IDEAS_URL: string = `http://${IDEAS_SERVICE_HOST}`;
 
-app.use(bodyParser());
+// TODO some kind of rpc implementation (simple request response model)
+// TODO logger
+// TODO find a way ro restart all services when changes in /packages occur?!
+
+mq.subscribe('idea created', msg => {
+  console.log('idea was created', msg);
+});
+
+app.use(bodyParser.json());
 
 app.get('/ideas/create', async (req, res) => {
   const request: HttpRequest = makeHttpRequest({ request: req });
