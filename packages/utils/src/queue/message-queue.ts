@@ -23,7 +23,7 @@ export class MessageQueue {
   // TODO maybe return observable
   subscribe = async (
     queue: string,
-    callback: (message: Message) => void,
+    callback: (message: Message | any) => void,
     fullMessage: boolean = false
   ) => {
     await this.createChannel();
