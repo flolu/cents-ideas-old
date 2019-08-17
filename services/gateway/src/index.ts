@@ -1,10 +1,20 @@
 import * as express from 'express';
 import bodyParser = require('body-parser');
 
-import { makeHttpRequest, expressResponseHandler, HttpClient, Logger } from '@cents-ideas/utils';
+import {
+  makeHttpRequest,
+  expressResponseHandler,
+  HttpClient,
+  Logger,
+  MessageQueue
+} from '@cents-ideas/utils';
+
+/* import { ApiAdapter } from './api-adapter';
+import { handleExpressResponse } from './express-response'; */
 
 const httpClient = new HttpClient();
 const logger = new Logger('⛩️ ');
+const mq = new MessageQueue();
 
 const port: number = 3000;
 const app = express();
@@ -16,15 +26,16 @@ logger.debug('ideas service url', IDEAS_URL);
 // TODO some kind of rpc implementation (simple request response model)
 // TODO find a way ro restart all services when changes in /packages occur?!
 // TODO proper error handling
+// TODO helmet , cors in gateway instaed of in every service
 
 app.use(bodyParser.json());
 
-app.get('/ideas/create', async (req, res) => {
-  const request = makeHttpRequest({ request: req });
-  logger.info('create idea', request.ip);
-  const response = await httpClient.post(IDEAS_URL, request);
-  logger.info('idea created', response.body.created.id);
-  expressResponseHandler({ res, httpResponse: response });
+app.get('/ideas/create', async (_req, res) => {
+  logger.debug('create new idea');
+  const response = await mq.request('create idea');
+  const json = JSON.parse(response.toString());
+  logger.debug('idea created', json.body.created.id);
+  res.send(json);
 });
 
 app.get('/ideas/:id', async (req, res) => {

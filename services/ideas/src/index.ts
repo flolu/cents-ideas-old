@@ -2,7 +2,7 @@ import * as express from 'express';
 import bodyParser = require('body-parser');
 
 import { HttpRequest } from '@cents-ideas/types';
-import { MessageQueue } from '@cents-ideas/utils';
+import { MessageQueue /* expressResponseHandler */ } from '@cents-ideas/utils';
 
 import { IdeaController } from './idea-controllers';
 import { IdeaUseCases } from './idea-use-cases';
@@ -19,16 +19,21 @@ const useCases = new IdeaUseCases(database, makeIdea);
 const controller = new IdeaController(useCases);
 const { logger } = env;
 
+mq.reply('create idea', async (_request: any, respond) => {
+  logger.info('create idea');
+  const response = await controller.create({ body: makeFakeIdea() });
+  respond(JSON.stringify(response));
+});
+
 app.use(bodyParser.json());
 
 app.post('/', async (req, res) => {
-  const request: HttpRequest = req.body;
-  logger.info('create idea', request.ip);
-  const response = await controller.create({ ...request, body: makeFakeIdea() });
+  logger.info('create idea', req.headers.ip);
+  const response = await controller.create({ body: makeFakeIdea() });
   res.json(response);
   if (!response.error && response.body.created) {
     logger.info('created idea', response.body.created.id);
-    mq.publish('idea created', response.body.created);
+    //mq.publish('idea created', response.body.created);
   }
 });
 

@@ -1,9 +1,13 @@
-import axios, { AxiosResponse } from 'axios';
+import axios, { AxiosResponse, AxiosRequestConfig } from 'axios';
 import { HttpResponse } from './http-response';
 
 export class HttpClient {
-  public post = async (url: string, body: any = {}): Promise<HttpResponse> => {
-    const response: AxiosResponse = await axios.post(url, body);
+  public post = async (
+    url: string,
+    body: any = {},
+    options: AxiosRequestConfig = {}
+  ): Promise<HttpResponse> => {
+    const response: AxiosResponse = await axios.post(url, body, options);
     return this._transformAxiosToHttpResponse(response);
   };
 
