@@ -7,20 +7,26 @@ import makeIdea from './idea';
 import { HttpRequest } from '@cents-ideas/types';
 import bodyParser = require('body-parser');
 import { env } from './environment';
+import { MessageQueue } from '@cents-ideas/utils';
 
 const port: number = env.port;
 const app = express();
 
+const mq = new MessageQueue();
 const database = new IdeaDatabase();
 const useCases = new IdeaUseCases(database, makeIdea);
 const controller = new IdeaController(useCases);
 
-app.use(bodyParser());
+app.use(bodyParser.json());
 
 app.post('/', async (req, res) => {
   const request: HttpRequest = req.body;
   const response = await controller.create({ ...request, body: makeFakeIdea() });
   res.json(response);
+  if (!response.error && response.body.created) {
+    mq.publish('idea created', response.body.created);
+  }
+  mq.publish('idea created', { kase: 'sfdkdsjlfdjl' });
 });
 
 app.post('/get-one', async (req, res) => {

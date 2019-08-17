@@ -26,3 +26,12 @@ services:
     image: mongo:4.0
     ports:
       - 27017:27017
+  rabbitmq:
+    image: rabbitmq:3.7-management
+    container_name: rabbitmq
+    environment:
+      RABBITMQ_DEFAULT_USER: "rabbitmq"
+      RABBITMQ_DEFAULT_PASS: "rabbitmq"
+    ports:
+      - 15672:15672
+      - 5672:5672
