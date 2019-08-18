@@ -16,10 +16,18 @@ spec:
         - name: ideas-service
           image: flolu/cents-ideas-ideas:latest
           env:
-          - name: ENV
+          - name: NODE_ENV
             value: development
           - name: IDEAS_SERVICE_DATABASE_URL
             value: mongodb://cents-ideas-ideas-db:27017
+          - name: LEVEL
+            value: info
+          - name: RABBIT_MQ_USER
+            value: rabbitmq
+          - name: RABBIT_MQ_PASS
+            value: rabbitmq
+          - name: RABBIT_MQ_HOST
+            value: cents-ideas-rabbitmq
 
 ---
 

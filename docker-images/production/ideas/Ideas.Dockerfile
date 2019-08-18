@@ -3,10 +3,11 @@ FROM node:lts-alpine
 WORKDIR /usr/app/src
 
 COPY ./packages/utils ./packages/utils
+COPY ./packages/types ./packages/types
 COPY ./services/ideas ./services/ideas
 
 COPY package.json .
-COPY ./docker-images/prod/ideas/tsconfig.json ./
+COPY ./docker-images/production/ideas/tsconfig.json ./
 COPY ./tsconfig.settings.json ./
 
 RUN yarn bootstrap

@@ -1,7 +1,5 @@
 import * as pino from 'pino';
 
-// TODO log persistence strategy
-// TODO exit logging https://github.com/pinojs/pino/blob/HEAD/docs/help.md#exit-logging
 export class Logger {
   private logger: pino.Logger;
 
