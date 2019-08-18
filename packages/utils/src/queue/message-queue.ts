@@ -7,7 +7,11 @@ const logger = new Logger('🐍  ');
 export class MessageQueue {
   private connection: Connection | undefined;
 
-  constructor(private url: string = 'amqp://rabbitmq:rabbitmq@rabbitmq') {
+  constructor(
+    private url: string = `amqp://${process.env.RABBIT_MQ_USER || 'rabbitmq'}:${process.env
+      .RABBIT_MQ_PASS || 'rabbitmq'}@${process.env.RABBIT_MQ_HOST || 'cents-ideas-rabbitmq'}` ||
+      'amqp://rabbitmq:rabbitmq@rabbitmq'
+  ) {
     logger.debug('initialized message queue', { url });
     this.ensureConnection();
   }

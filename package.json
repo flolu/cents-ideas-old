@@ -7,11 +7,11 @@
   ],
   "scripts": {
     "clear": "rimraf **/dist",
-    "bootstrap": "yarn clear && yarn install && yarn run build",
+    "bootstrap": "yarn install && yarn run build",
     "tsc": "tsc",
     "build": "tsc --build",
     "build:watch": "tsc --build --watch",
-    "start": "docker-compose -f docker-compose.yml up --build",
+    "start": "yarn start:docker",
     "start:docker": "docker-compose -f docker-compose.yml up --build",
     "start:docker:dev": "docker-compose -f docker-compose.dev.yml up --build",
     "start:dev": "npm-run-all --parallel build:watch start:docker:dev",

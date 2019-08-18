@@ -26,7 +26,10 @@ docker push $DOCKER_ID_USER/my_image
 ### Read logs
 
 ```
+kubectl get all
 kubectl logs <pod>
+kubectl apply -f <file or folder>
+kubectl delete all --all
 ```
 
 // FIXME create script to automatically build, tag and push docker images
