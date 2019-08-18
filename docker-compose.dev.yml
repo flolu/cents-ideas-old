@@ -1,0 +1,38 @@
+version: '3'
+services:
+  ideas-db:
+    container_name: ideas-db
+    image: mongo:4.0
+    ports:
+      - 27017:27017
+  rabbitmq:
+    image: rabbitmq:3.7-management
+    container_name: rabbitmq
+    environment:
+      RABBITMQ_DEFAULT_USER: "rabbitmq"
+      RABBITMQ_DEFAULT_PASS: "rabbitmq"
+    ports:
+      - 15672:15672
+      - 5672:5672
+  gateway:
+    container_name: gateway
+    build:
+      context: ./
+      dockerfile: ./docker-images/development/gateway/Gateway.Dockerfile
+    volumes:
+      - ./services/gateway/dist:/usr/app/src/services/gateway/dist
+      - ./packages/utils/dist:/usr/app/src/packages/utils/dist
+      - ./node_modules:/usr/app/src/node_modules
+    ports:
+      - 3000:3000
+    env_file: ./env/.env.development
+  ideas:
+    container_name: ideas
+    build:
+      context: ./
+      dockerfile: ./docker-images/development/ideas/Ideas.Dockerfile
+    volumes:
+      - ./services/ideas/dist:/usr/app/src/services/ideas/dist
+      - ./packages/utils/dist:/usr/app/src/packages/utils/dist
+      - ./node_modules:/usr/app/src/node_modules
+    env_file: ./env/.env.development
