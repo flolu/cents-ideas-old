@@ -1,25 +1,25 @@
 import * as express from 'express';
 import bodyParser = require('body-parser');
 
-import { Logger, MessageQueue } from '@cents-ideas/utils';
-import { handleExpressResponse } from './express-response';
-import { makeHttpRequest } from './express-request';
+import { MessageQueue } from '@cents-ideas/utils';
 
-const logger = new Logger('⛩️ ');
+import env from './environment';
+import { makeHttpRequest } from './express-request';
+import { handleExpressResponse } from './express-response';
+
+const { logger } = env;
 const mq = new MessageQueue();
 
-// TODO env
-const port: number = 3000;
+const port: number = env.port;
 const app = express();
 
-// TODO some kind of rpc implementation (simple request response model)
 // TODO find a way ro restart all services when changes in /packages occur?!
 // TODO proper error handling
 // TODO helmet , cors in gateway instead of in every service
 
 app.use(bodyParser.json());
 
-// TODO simplify
+// TODO simplify and abstract express away from logic
 app.get('/ideas/create', async (req, res) => {
   const request = makeHttpRequest(req);
   logger.info('create new idea');
