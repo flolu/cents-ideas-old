@@ -32,7 +32,7 @@ app.use(bodyParser.json());
 
 app.get('/ideas/create', async (_req, res) => {
   logger.debug('create new idea');
-  const response = await mq.request('create idea');
+  const response = await mq.request('rpc_queue', { some: 'payload' });
   const json = JSON.parse(response.toString());
   logger.debug('idea created', json.body.created.id);
   res.send(json);

@@ -19,7 +19,7 @@ const useCases = new IdeaUseCases(database, makeIdea);
 const controller = new IdeaController(useCases);
 const { logger } = env;
 
-mq.reply('create idea', async (_request: any, respond) => {
+mq.reply('rpc_queue', async (_request: any, respond) => {
   logger.info('create idea');
   const response = await controller.create({ body: makeFakeIdea() });
   respond(JSON.stringify(response));

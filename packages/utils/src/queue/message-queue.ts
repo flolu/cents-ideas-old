@@ -1,126 +1,134 @@
 import * as amqp from 'amqplib/callback_api';
 import { Connection, Message } from 'amqplib/callback_api';
 
+import { Logger } from '../logger';
+const logger = new Logger('🐍  ');
+
 export class MessageQueue {
   private connection: Connection | undefined;
 
-  constructor(private url: string = 'amqp://rabbitmq:rabbitmq@rabbitmq') {}
-
-  private ensureConnection = (): Promise<Connection> => {
-    return new Promise((resolve, reject) => {
-      try {
-        console.info('🐍  assure connection');
-        if (this.connection) {
-          console.info('🐍  already connected');
-          return resolve(this.connection);
-        }
-        const retry = () => {
-          console.info('🐍  retry connection');
-          if (this.connection) {
-            clearInterval(timer);
-            return;
-          }
-          amqp.connect(this.url, (err, conn) => {
-            if (err) {
-              return reject(err);
-            }
-            console.info('🐍  established connection after retry');
-            this.connection = conn;
-            clearInterval(timer);
-            return resolve(conn);
-          });
-        };
-        const timer = setInterval(retry, 1000);
-      } catch (error) {
-        return reject(error);
-      }
-    });
-  };
+  constructor(private url: string = 'amqp://rabbitmq:rabbitmq@rabbitmq') {
+    logger.debug('initialized message queue', { url });
+    this.ensureConnection();
+  }
 
   public reply = async (
     queue: string,
     _callback: (request: Message, respond: (payload: any) => void) => void
   ) => {
-    console.info('🐍  reply...');
+    const loggerPrefix: string = 'reply -> ';
+    logger.debug(loggerPrefix, 'initialize listener: ', queue);
     await this.ensureConnection();
-    console.info('🐍  established connection for reply');
-    if (!this.connection) {
-      return;
-    }
-    this.connection.createChannel(function(error1: any, channel: any) {
-      if (error1) {
-        throw error1;
-      }
-      channel.assertQueue(queue, {
-        durable: false
+    logger.debug(loggerPrefix, 'established connection: ', queue);
+    this.connection &&
+      this.connection.createChannel((err1, channel: amqp.Channel) => {
+        if (err1) {
+          logger.error(loggerPrefix, 'while creating channel: ', queue);
+          throw err1;
+        }
+        channel.assertQueue(queue, {
+          durable: false
+        });
+        channel.prefetch(1);
+        channel.consume(queue, (message: Message | null) => {
+          logger.debug(loggerPrefix, 'got message from: ', queue);
+          if (message) {
+            const send = (payload: any): void => {
+              logger.debug(
+                loggerPrefix,
+                'reply to queue: ',
+                message.properties.replyTo,
+                ' with: ',
+                payload
+              );
+              channel.sendToQueue(message.properties.replyTo, Buffer.from(payload), {
+                correlationId: message.properties.correlationId
+              });
+            };
+            _callback(message, send);
+            channel.ack(message);
+          }
+        });
       });
-      channel.prefetch(1);
-      channel.consume(queue, function reply(msg: any) {
-        const send = (payload: any): void => {
-          channel.sendToQueue(msg.properties.replyTo, Buffer.from(payload), {
-            correlationId: msg.properties.correlationId
-          });
-        };
-        _callback(msg, send);
-        channel.ack(msg);
-      });
-    });
   };
 
   public request = (queue: string, payload: any = {}): Promise<any> => {
+    const loggerPrefix: string = 'request -> ';
     return new Promise(async (resolve, reject) => {
-      console.info('🐍  request...');
+      logger.debug(loggerPrefix, 'to queue: ', queue);
       await this.ensureConnection();
-      console.info('🐍  established connection for request');
-      if (!this.connection) {
-        console.info('🐍  no connection even though there should be a connection');
-        return;
-      }
-      this.connection.createChannel(function(error1: any, channel: any) {
-        if (error1) {
-          console.info('🐍  error while creating channel', error1);
-          return reject(error1);
-        }
-        channel.assertQueue(
-          '',
-          {
-            exclusive: true
-          },
-          function(error2: any, q: any) {
-            if (error2) {
-              throw error2;
-            }
-            function generateUuid() {
-              return Math.random().toString() + Math.random().toString() + Math.random().toString();
-            }
-            var correlationId = generateUuid();
-            console.info('🐍   start consuming');
-            channel.consume(
-              q.queue,
-              function(msg: any) {
-                // TODO message not consumed after clean restart
-                console.info('🐍   consumed message');
-                if (msg.properties.correlationId === correlationId) {
-                  console.info('🐍   correlations match');
-                  return resolve(msg.content.toString());
-                }
-              },
-              {
-                noAck: true
-              }
-            );
-
-            channel.sendToQueue(queue, Buffer.from(JSON.stringify(payload)), {
-              correlationId: correlationId,
-              replyTo: q.queue
-            });
-            console.info('🐍   sent request to queue');
+      logger.debug(loggerPrefix, 'established connection to: ', queue);
+      this.connection &&
+        this.connection.createChannel((err1, channel: amqp.Channel) => {
+          if (err1) {
+            logger.error(loggerPrefix, 'while creating channel for: ', queue, err1);
+            return reject(err1);
           }
-        );
-      });
+          channel.assertQueue(
+            '',
+            {
+              exclusive: true
+            },
+            (err2, q) => {
+              if (err2) {
+                return reject(err2);
+              }
+              const correlationId: string =
+                Math.random().toString() + Math.random().toString() + Math.random().toString();
+              logger.debug('start consuming: ', q.queue);
+              channel.consume(
+                q.queue,
+                (message: Message | null) => {
+                  logger.debug(loggerPrefix, 'consumed message');
+                  if (message && message.properties.correlationId === correlationId) {
+                    logger.debug(loggerPrefix, 'correlation matches: ', correlationId);
+                    return resolve(message.content.toString());
+                  }
+                },
+                {
+                  noAck: true
+                }
+              );
+              channel.sendToQueue(queue, Buffer.from(JSON.stringify(payload)), {
+                correlationId: correlationId,
+                replyTo: q.queue
+              });
+            }
+          );
+        });
     });
   };
 
+  private ensureConnection = (): Promise<Connection> =>
+    new Promise((resolve, reject) => {
+      try {
+        logger.debug('ensure connection');
+        if (this.connection) {
+          logger.debug('already connected');
+          return resolve(this.connection);
+        }
+        const retry = () => {
+          if (this.connection) {
+            clearInterval(timer);
+            logger.debug('found connection while retrying');
+            return resolve(this.connection);
+          }
+          logger.debug('retry connecting');
+          amqp.connect(this.url, (err, conn) => {
+            if (!err) {
+              logger.debug('established connection while retrying');
+              this.connection = conn;
+              clearInterval(timer);
+              return resolve(conn);
+            }
+          });
+        };
+        const timer = setInterval(retry, 1000);
+      } catch (error) {
+        logger.error('while connecting', error);
+        return reject(error);
+      }
+    });
   /* publish = async (queue: string, message: object) => {
     await this.createChannel();
     this.channel.assertQueue(queue, { durable: true });
