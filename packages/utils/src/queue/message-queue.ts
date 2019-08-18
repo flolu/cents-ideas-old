@@ -34,13 +34,7 @@ export class MessageQueue {
           logger.debug(loggerPrefix, 'got message from: ', queue);
           if (message) {
             const send = (payload: any): void => {
-              logger.debug(
-                loggerPrefix,
-                'reply to queue: ',
-                message.properties.replyTo,
-                ' with: ',
-                payload
-              );
+              logger.debug(loggerPrefix, 'reply to queue: ', message.properties.replyTo);
               channel.sendToQueue(message.properties.replyTo, Buffer.from(payload), {
                 correlationId: message.properties.correlationId
               });
@@ -129,7 +123,9 @@ export class MessageQueue {
         return reject(error);
       }
     });
-  /* publish = async (queue: string, message: object) => {
+
+  // TODO
+  /*  publish = async (queue: string, message: object) => {
     await this.createChannel();
     this.channel.assertQueue(queue, { durable: true });
     this.channel.sendToQueue(queue, Buffer.from(JSON.stringify(message)));
@@ -155,66 +151,7 @@ export class MessageQueue {
     );
   };
 
-  sendRequest = (queue: string, payload: any) =>
-    new Promise(async (resolve, reject) => {
-      await this.connect();
-      this.connection.createChannel((err, channel) => {
-        if (err) {
-          return reject(err);
-        }
-        channel.assertQueue(queue, { durable: false }, (err, q: Replies.AssertQueue) => {
-          if (err) {
-            return reject(err);
-          }
-          // TODO outsource unique id creation
-          const correlationId: string =
-            Math.random().toString() + Math.random().toString() + Math.random().toString();
-          channel.sendToQueue(queue, Buffer.from(JSON.stringify(payload)), {
-            correlationId,
-            replyTo: q.queue
-          });
-          channel.consume(
-            q.queue,
-            (message: Message | null) => {
-              if (message) {
-                if (message.properties.correlationId === correlationId) {
-                  channel.close(() => {});
-                  return resolve(message.content.toString());
-                }
-              }
-            },
-            { noAck: true }
-          );
-        });
-      });
-    });
-
-  sendResponse = async (
-    queue: string,
-    callback: (request: Message, respond: (payload: any) => void) => void
-  ) => {
-    await this.connect();
-    this.connection.createChannel((err, channel) => {
-      if (err) {
-        throw err;
-      }
-      channel.assertQueue(queue, { durable: false });
-      channel.prefetch(1);
-      channel.consume(queue, (message: Message | null) => {
-        if (message) {
-          const send = (payload: any): void => {
-            channel.sendToQueue(message.properties.replyTo, Buffer.from(payload), {
-              correlationId: message.properties.correlationId
-            });
-            channel.ack(message);
-          };
-          callback(message, send);
-        }
-      });
-    });
-  }; */
-
-  /* private connectAndCreateChannel = (): Promise<{ connection: Connection; channel: Channel }> =>
+   private connectAndCreateChannel = (): Promise<{ connection: Connection; channel: Channel }> =>
     new Promise((resolve, reject) => {
       amqp.connect(this.url, (err, connection) => {
         if (err) {
@@ -228,8 +165,8 @@ export class MessageQueue {
         });
       });
     });
- */
-  /*  private createChannel = (): Promise<Channel> =>
+
+    private createChannel = (): Promise<Channel> =>
     new Promise(async (resolve, reject) => {
       if (this.channel) {
         return resolve(this.channel);
@@ -258,5 +195,5 @@ export class MessageQueue {
       } else {
         return resolve(this.connection);
       }
-    }); */
+    });  */
 }
