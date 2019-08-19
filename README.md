@@ -32,6 +32,5 @@ kubectl apply -f <file or folder>
 kubectl delete all --all
 ```
 
-// TODO create script to automatically build, tag and push docker images
-
+// FIXME create script to automatically build, tag and push docker images
 // TODO better way of supplying k8s pods with env vars

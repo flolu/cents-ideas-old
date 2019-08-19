@@ -18,27 +18,25 @@ export class MessageQueue {
 
   public reply = async (
     queue: string,
-    _callback: (request: Message, respond: (payload: any) => void) => void
+    _callback: (request: Message, respond: (payload: string) => void) => void
   ) => {
-    const loggerPrefix: string = 'reply -> ';
-    logger.debug(loggerPrefix, 'initialize listener: ', queue);
+    const _loggerPrefix: string = 'reply -> ';
+    logger.debug(_loggerPrefix, 'initialize listener: ', queue);
     await this.ensureConnection();
-    logger.debug(loggerPrefix, 'established connection: ', queue);
+    logger.debug(_loggerPrefix, 'established connection: ', queue);
     this.connection &&
       this.connection.createChannel((err1, channel: amqp.Channel) => {
         if (err1) {
-          logger.error(loggerPrefix, 'while creating channel: ', queue);
+          logger.error(_loggerPrefix, 'while creating channel: ', queue);
           throw err1;
         }
-        channel.assertQueue(queue, {
-          durable: false
-        });
+        channel.assertQueue(queue, { durable: false });
         channel.prefetch(1);
         channel.consume(queue, (message: Message | null) => {
-          logger.debug(loggerPrefix, 'got message from: ', queue);
+          logger.debug(_loggerPrefix, 'got message from: ', queue);
           if (message) {
-            const send = (payload: any): void => {
-              logger.debug(loggerPrefix, 'reply to queue: ', message.properties.replyTo);
+            const send = (payload: string): void => {
+              logger.debug(_loggerPrefix, 'reply to queue: ', message.properties.replyTo);
               channel.sendToQueue(message.properties.replyTo, Buffer.from(payload), {
                 correlationId: message.properties.correlationId
               });
@@ -50,7 +48,7 @@ export class MessageQueue {
       });
   };
 
-  public request = (queue: string, payload: any = {}): Promise<any> => {
+  public request = (queue: string, payload: string = ''): Promise<string> => {
     const loggerPrefix: string = 'request -> ';
     return new Promise(async (resolve, reject) => {
       logger.debug(loggerPrefix, 'to queue: ', queue);
@@ -87,7 +85,7 @@ export class MessageQueue {
                   noAck: true
                 }
               );
-              channel.sendToQueue(queue, Buffer.from(JSON.stringify(payload)), {
+              channel.sendToQueue(queue, Buffer.from(payload), {
                 correlationId: correlationId,
                 replyTo: q.queue
               });
@@ -128,7 +126,7 @@ export class MessageQueue {
       }
     });
 
-  // TODO
+  // TODO reactivate
   /*  publish = async (queue: string, message: object) => {
     await this.createChannel();
     this.channel.assertQueue(queue, { durable: true });
