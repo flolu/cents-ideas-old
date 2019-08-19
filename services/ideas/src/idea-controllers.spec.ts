@@ -1,5 +1,5 @@
 import { HttpRequest, HttpResponse, Idea } from '@cents-ideas/types';
-import { HttpStatusCodes } from '@cents-ideas/utils';
+import { HttpStatusCodes } from '@cents-ideas/enums';
 import makeIdea from './idea';
 import { IdeaController } from './idea-controllers';
 import { IdeaDatabase } from './idea-database';
@@ -30,7 +30,7 @@ describe('IdeaController', () => {
       const request: HttpRequest = { body: idea };
       const expected: HttpResponse<{ created: Idea }> = {
         body: { created: idea },
-        status: HttpStatusCodes.CREATED,
+        status: HttpStatusCodes.Created,
         error: false
       };
       const actual: HttpResponse = await controller.create(request);

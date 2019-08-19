@@ -13,6 +13,7 @@
   "dependencies": {
     "@cents-ideas/types": "1.0.0",
     "@cents-ideas/utils": "1.0.0",
+    "@cents-ideas/enums": "1.0.0",
     "amqplib": "^0.5.5",
     "faker": "^4.1.0",
     "mongodb": "^3.3.0-beta2"

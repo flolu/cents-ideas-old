@@ -1,7 +1,7 @@
 import { Idea } from '@cents-ideas/types';
 import { IdeaUseCases } from './idea-use-cases';
 import { HttpRequest, HttpResponse } from '@cents-ideas/types';
-import { HttpStatusCodes } from '@cents-ideas/utils';
+import { HttpStatusCodes } from '@cents-ideas/enums';
 
 import env from './environment';
 const { logger } = env;
@@ -15,14 +15,14 @@ export class IdeaController {
       logger.debug(loggerPrefix, 'create', request);
       const created: Idea = await this.useCases.add(request.body);
       return {
-        status: HttpStatusCodes.CREATED,
+        status: HttpStatusCodes.Created,
         body: { created },
         error: false
       };
     } catch (error) {
       logger.error(loggerPrefix, 'error in create', error);
       return {
-        status: HttpStatusCodes.INTERNAL_SERVER_ERROR,
+        status: HttpStatusCodes.InternalServerError,
         body: {},
         error: error.message
       };
