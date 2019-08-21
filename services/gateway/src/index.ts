@@ -2,6 +2,7 @@ import * as express from 'express';
 import bodyParser = require('body-parser');
 
 import { MessageQueue } from '@cents-ideas/utils';
+import { RpcIdeaNames } from '@cents-ideas/enums';
 
 import env from './environment';
 import { ExpressAdapter } from './express-adapter';
@@ -19,9 +20,9 @@ const ideasApiRoot: string = '/ideas';
 
 app.use(bodyParser.json());
 
-app.get(`${ideasApiRoot}/create`, expressAdapter.makeJsonAdapter('create idea'));
-app.get(`${ideasApiRoot}/:id`, expressAdapter.makeJsonAdapter('get one idea'));
-app.get(`${ideasApiRoot}`, expressAdapter.makeJsonAdapter('get all ideas'));
+app.get(`${ideasApiRoot}/create`, expressAdapter.makeJsonAdapter(RpcIdeaNames.Create));
+app.get(`${ideasApiRoot}/:id`, expressAdapter.makeJsonAdapter(RpcIdeaNames.GetOne));
+app.get(`${ideasApiRoot}`, expressAdapter.makeJsonAdapter(RpcIdeaNames.GetAll));
 
 app.get('**', (_req, res) => res.send('cents-ideas-gateway'));
 app.listen(port, () => logger.info('gateway listening on internal port', port));

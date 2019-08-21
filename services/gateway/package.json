@@ -11,6 +11,7 @@
   },
   "dependencies": {
     "@cents-ideas/utils": "1.0.0",
+    "@cents-ideas/enums": "1.0.0",
     "amqplib": "^0.5.5",
     "axios": "^0.19.0",
     "body-parser": "^1.19.0",

@@ -11,7 +11,6 @@ export class ExpressAdapter {
   constructor(private messageQueue: MessageQueue) {}
 
   // FIXME timeout handler either here or in mq
-  // TODO util for queue names? -> controllerId: MessageQControllerId
   public makeJsonAdapter = (controllerId: string): express.RequestHandler => {
     return async (req: express.Request, res: express.Response) => {
       const httpRequest: HttpRequest = this.makeHttpRequestFromExpressRequest(req);
