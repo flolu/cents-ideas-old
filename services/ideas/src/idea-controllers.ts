@@ -10,6 +10,7 @@ const loggerPrefix: string = 'controller ->';
 export class IdeaController {
   constructor(private useCases: IdeaUseCases) {}
 
+  // TODO type other controllers, too
   public create = async (request: HttpRequest): Promise<HttpResponse<{ created?: Idea }>> => {
     try {
       logger.debug(loggerPrefix, 'create', request);
@@ -28,7 +29,7 @@ export class IdeaController {
       };
     }
   };
-
+  // TODO handle not found
   public getOne = async (request: HttpRequest): Promise<HttpResponse> => {
     try {
       logger.debug(loggerPrefix, 'getOne', request);

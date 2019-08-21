@@ -1,4 +1,9 @@
 {
   "files": [],
-  "references": [{ "path": "packages/utils" }, { "path": "services/gateway" }]
+  "references": [
+    { "path": "packages/utils" },
+    { "path": "packages/types" },
+    { "path": "packages/enums" },
+    { "path": "services/ideas" }
+  ]
 }

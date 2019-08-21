@@ -11,16 +11,16 @@ export class ExpressAdapter {
   constructor(private messageQueue: MessageQueue) {}
 
   // FIXME timeout handler either here or in mq
-  public makeJsonAdapter = (controllerId: string): express.RequestHandler => {
+  public makeJsonAdapter = (rpcControllerName: string): express.RequestHandler => {
     return async (req: express.Request, res: express.Response) => {
       const httpRequest: HttpRequest = this.makeHttpRequestFromExpressRequest(req);
-      logger.info(controllerId);
+      logger.info(rpcControllerName);
       const response: string = await this.messageQueue.request(
-        controllerId,
+        rpcControllerName,
         JSON.stringify(httpRequest)
       );
       const httpResponse: HttpResponse = JSON.parse(response);
-      logger.info(controllerId, ' -> done');
+      logger.info(rpcControllerName, ' -> done');
       this.handleExpressHttpResponse(res, httpResponse);
     };
   };
