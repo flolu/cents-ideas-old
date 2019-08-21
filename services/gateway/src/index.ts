@@ -24,5 +24,6 @@ app.get(`${ideasApiRoot}/create`, expressAdapter.makeJsonAdapter(RpcIdeaNames.Cr
 app.get(`${ideasApiRoot}/:id`, expressAdapter.makeJsonAdapter(RpcIdeaNames.GetOne));
 app.get(`${ideasApiRoot}`, expressAdapter.makeJsonAdapter(RpcIdeaNames.GetAll));
 
+// TODO send 404 instead of this
 app.get('**', (_req, res) => res.send('cents-ideas-gateway'));
 app.listen(port, () => logger.info('gateway listening on internal port', port));

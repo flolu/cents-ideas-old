@@ -1,7 +1,7 @@
 import * as amqp from 'amqplib/callback_api';
 import { Connection, Message } from 'amqplib/callback_api';
 
-import { Logger } from '../logger';
+import { Logger } from './logger';
 const logger = new Logger('🐍  ');
 
 export class MessageQueue {

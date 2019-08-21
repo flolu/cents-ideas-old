@@ -1,5 +1,8 @@
-import { makeUniqueId, isIdValid, sanitizeText } from '@cents-ideas/utils';
+import { Identifier, Sanitizer } from '@cents-ideas/utils';
 import { Idea } from '@cents-ideas/types';
+
+const identifier = new Identifier();
+const sanitizer = new Sanitizer();
 
 export enum IdeaErrors {
   IdRequired = 'Idea must have an id',
@@ -15,7 +18,7 @@ export enum IdeaErrors {
 }
 
 export default ({
-  id = makeUniqueId(),
+  id = identifier.makeUniqueId(),
   userId,
   title,
   description,
@@ -25,14 +28,14 @@ export default ({
   if (!id) {
     throw new Error(IdeaErrors.IdRequired);
   }
-  if (!isIdValid(id)) {
+  if (!identifier.isValidId(id)) {
     throw new Error(IdeaErrors.IdInvalid);
   }
 
   if (!userId) {
     throw new Error(IdeaErrors.UserIdRequired);
   }
-  if (!isIdValid(userId)) {
+  if (!identifier.isValidId(userId)) {
     throw new Error(IdeaErrors.UserIdInvalid);
   }
 
@@ -42,7 +45,7 @@ export default ({
   if (title.length > 100) {
     throw new Error(IdeaErrors.TitleMaxLength);
   }
-  const sanitizedTitle: string = sanitizeText(title).trim();
+  const sanitizedTitle: string = sanitizer.sanitizeText(title).trim();
   if (sanitizedTitle.length < 1) {
     throw new Error(IdeaErrors.TitleSanitizedInvalid);
   }
@@ -53,7 +56,7 @@ export default ({
   if (description.length > 10000) {
     throw new Error(IdeaErrors.DescriptionMaxLength);
   }
-  const sanitizedDescription: string = sanitizeText(description).trim();
+  const sanitizedDescription: string = sanitizer.sanitizeText(description).trim();
   if (sanitizedDescription.length < 1) {
     throw new Error(IdeaErrors.DescriptionSanitizedInvalid);
   }
