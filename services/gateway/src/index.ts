@@ -14,9 +14,9 @@ const port: number = env.port;
 const app = express();
 const ideasApiRoot: string = '/ideas';
 
+// FIXME clicking on a typescript type should get you to the .ts file not the computed one!
 // FIXME find a way ro restart all services when changes in /packages occur?!
-// TODO proper error handling
-// TODO helmet, cors in gateway instead of in every service
+// FIXME helmet, cors in gateway instead of in every service
 
 app.use(bodyParser.json());
 

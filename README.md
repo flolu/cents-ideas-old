@@ -23,7 +23,7 @@ docker push $DOCKER_ID_USER/my_image
 
 ## K8s
 
-### Read logs
+### General
 
 ```
 kubectl get all

@@ -30,7 +30,8 @@ describe('IdeaUseCases', () => {
   it('gets all ideas from the database', async () => {
     const idea1 = makeFakeIdea();
     const idea2 = makeFakeIdea();
-    await Promise.all([idea1, idea2].map(database.insert));
+    await database.insert(idea1);
+    await database.insert(idea2);
     const found: Idea[] = await database.findAll();
     expect(found).toContainEqual(idea1);
     expect(found).toContainEqual(idea2);

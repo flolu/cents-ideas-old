@@ -7,8 +7,7 @@ const { logger } = env;
 const loggerPrefix: string = 'use-cases ->';
 
 export class IdeaUseCases {
-  // TODO type?
-  constructor(private database: IdeaDatabase, private makeIdea: any) {}
+  constructor(private database: IdeaDatabase, private makeIdea: Function) {}
 
   add = (payload: any): Promise<Idea> => {
     logger.debug(loggerPrefix, 'add');

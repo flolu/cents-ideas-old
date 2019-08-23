@@ -24,7 +24,7 @@ export default ({
   description,
   createdAt = new Date().toUTCString(),
   updatedAt = new Date().toUTCString()
-}: Partial<Idea>) => {
+}: Partial<Idea>): Idea => {
   if (!id) {
     throw new Error(IdeaErrors.IdRequired);
   }
@@ -61,12 +61,12 @@ export default ({
     throw new Error(IdeaErrors.DescriptionSanitizedInvalid);
   }
 
-  return Object.freeze({
+  return {
     id,
     userId,
     title: sanitizedTitle,
     description: sanitizedDescription,
     createdAt,
     updatedAt
-  });
+  };
 };

@@ -53,10 +53,12 @@ export class IdeaDatabase {
   };
 
   public findById = async (ideaId: string): Promise<Idea> => {
-    // TODO handle not found etc
     logger.debug(loggerPrefix, 'find idea by id', ideaId);
     const database: Db = await this.makeDatabase();
     const result = await database.collection(this.COLLECTION_NAME).findOne({ _id: ideaId });
+    if (!result) {
+      throw new Error('Idea not found');
+    }
     logger.debug(loggerPrefix, 'found idea by id', ideaId);
     const { _id: id, ...data } = result;
     return { id, ...data };

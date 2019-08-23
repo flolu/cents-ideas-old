@@ -1,5 +1,5 @@
 export interface HttpResponse<T = any> {
-  body: T;
+  body: T | { error: any };
   status: number;
   error: any | boolean;
   headers?: { [key: string]: string };

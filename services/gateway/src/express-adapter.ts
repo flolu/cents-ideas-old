@@ -29,11 +29,15 @@ export class ExpressAdapter {
     if (httpResponse.headers) {
       res.set(httpResponse.headers);
     }
-    res.status(httpResponse.status).send(httpResponse.body);
+    let body = { ...httpResponse.body };
+    if (httpResponse.error) {
+      body = { ...body, error: httpResponse.error };
+    }
+    res.status(httpResponse.status).send(body);
   };
 
   private makeHttpRequestFromExpressRequest = (expressRequest: express.Request): HttpRequest => {
-    return Object.freeze({
+    return {
       body: expressRequest.body,
       query: expressRequest.query,
       params: expressRequest.params,
@@ -43,6 +47,6 @@ export class ExpressAdapter {
       url: expressRequest.url,
       cookies: expressRequest.cookies,
       headers: expressRequest.headers
-    });
+    };
   };
 }

@@ -10,7 +10,6 @@ const loggerPrefix: string = 'controller ->';
 export class IdeaController {
   constructor(private useCases: IdeaUseCases) {}
 
-  // TODO type other controllers, too
   public create = async (request: HttpRequest): Promise<HttpResponse<{ created?: Idea }>> => {
     try {
       logger.debug(loggerPrefix, 'create', request);
@@ -22,35 +21,7 @@ export class IdeaController {
       };
     } catch (error) {
       // FIXME find a way to handle expected errors
-      logger.error(loggerPrefix, 'error in create', error);
-      return {
-        status: HttpStatusCodes.BadRequest,
-        body: {},
-        error: error.message
-      };
-    }
-  };
-  // TODO handle not found
-  public getOne = async (request: HttpRequest): Promise<HttpResponse> => {
-    try {
-      logger.debug(loggerPrefix, 'getOne', request);
-      const found: Idea = await this.useCases.getOne(request.params.id);
-      if (found) {
-        return {
-          status: HttpStatusCodes.Ok,
-          body: { found },
-          error: false
-        };
-      } else {
-        return {
-          status: HttpStatusCodes.NotFound,
-          body: {},
-          // FIXME unify error messages with enum or so?
-          error: 'Idea not found'
-        };
-      }
-    } catch (error) {
-      logger.error(loggerPrefix, 'error in getOne', error);
+      logger.error(loggerPrefix, 'error in create: ', error.message);
       return {
         status: HttpStatusCodes.BadRequest,
         body: {},
@@ -59,7 +30,34 @@ export class IdeaController {
     }
   };
 
-  public getAll = async (request: HttpRequest): Promise<HttpResponse> => {
+  public getOne = async (request: HttpRequest): Promise<HttpResponse<{ found?: Idea }>> => {
+    try {
+      logger.debug(loggerPrefix, 'getOne', request);
+      const found: Idea = await this.useCases.getOne(request.params.id);
+      return {
+        status: HttpStatusCodes.Ok,
+        body: { found },
+        error: false
+      };
+    } catch (error) {
+      logger.error(loggerPrefix, 'error in getOne: ', error.message);
+      // FIXME better method to handle expected errors
+      if (error.message === 'Idea not found') {
+        return {
+          status: HttpStatusCodes.NotFound,
+          body: {},
+          error: error.message
+        };
+      }
+      return {
+        status: HttpStatusCodes.BadRequest,
+        body: {},
+        error: error.message
+      };
+    }
+  };
+
+  public getAll = async (request: HttpRequest): Promise<HttpResponse<{ found?: Idea[] }>> => {
     try {
       logger.debug(loggerPrefix, 'getAll', request);
       const found: Idea[] = await this.useCases.getAll();
@@ -69,7 +67,7 @@ export class IdeaController {
         error: false
       };
     } catch (error) {
-      logger.error(loggerPrefix, 'error in getAll', error);
+      logger.error(loggerPrefix, 'error in getAll: ', error.message);
       return {
         status: HttpStatusCodes.BadRequest,
         body: {},
