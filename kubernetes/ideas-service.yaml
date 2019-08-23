@@ -16,21 +16,20 @@ spec:
         - name: ideas-service
           image: flolu/cents-ideas-ideas:latest
           env:
-          - name: NODE_ENV
-            value: development
-          - name: IDEAS_SERVICE_DATABASE_URL
-            value: mongodb://cents-ideas-ideas-db:27017
-          - name: LEVEL
-            value: info
-          - name: RABBIT_MQ_USER
-            value: rabbitmq
-          - name: RABBIT_MQ_PASS
-            value: rabbitmq
-          - name: RABBIT_MQ_HOST
-            value: cents-ideas-rabbitmq
+            - name: NODE_ENV
+              value: development
+            - name: IDEAS_SERVICE_DATABASE_URL
+              value: mongodb://cents-ideas-ideas-db:27017
+            - name: LEVEL
+              value: info
+            - name: RABBIT_MQ_USER
+              value: rabbitmq
+            - name: RABBIT_MQ_PASS
+              value: rabbitmq
+            - name: RABBIT_MQ_HOST
+              value: cents-ideas-rabbitmq
 
 ---
-
 apiVersion: v1
 kind: Service
 metadata:
@@ -44,7 +43,6 @@ spec:
   type: ClusterIP
 
 ---
-
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -71,7 +69,6 @@ spec:
             claimName: database-pvc
 
 ---
-
 apiVersion: v1
 kind: Service
 metadata:

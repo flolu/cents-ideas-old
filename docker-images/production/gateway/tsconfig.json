@@ -4,6 +4,6 @@
     { "path": "packages/utils" },
     { "path": "packages/types" },
     { "path": "packages/enums" },
-    { "path": "services/ideas" }
+    { "path": "services/gateway" }
   ]
 }

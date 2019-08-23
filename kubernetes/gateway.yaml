@@ -16,21 +16,20 @@ spec:
         - name: gateway
           image: flolu/cents-ideas-gateway:latest
           env:
-          - name: NODE_ENV
-            value: development
-          - name: IDEAS_SERVICE_HOST
-            value: cents-ideas-ideas:3000
-          - name: LEVEL
-            value: info
-          - name: RABBIT_MQ_USER
-            value: rabbitmq
-          - name: RABBIT_MQ_PASS
-            value: rabbitmq
-          - name: RABBIT_MQ_HOST
-            value: cents-ideas-rabbitmq
+            - name: NODE_ENV
+              value: development
+            - name: IDEAS_SERVICE_HOST
+              value: cents-ideas-ideas:3000
+            - name: LEVEL
+              value: info
+            - name: RABBIT_MQ_USER
+              value: rabbitmq
+            - name: RABBIT_MQ_PASS
+              value: rabbitmq
+            - name: RABBIT_MQ_HOST
+              value: cents-ideas-rabbitmq
 
 ---
-
 apiVersion: v1
 kind: Service
 metadata:
