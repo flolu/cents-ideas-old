@@ -1,3 +1,4 @@
+import { MessageQueue } from '@cents-ideas/utils';
 import { HttpRequest, HttpResponse, Idea } from '@cents-ideas/types';
 import { HttpStatusCodes } from '@cents-ideas/enums';
 
@@ -8,6 +9,7 @@ import { IdeaUseCases } from './idea-use-cases';
 import makeFakeIdea from './test/idea.mock';
 
 describe('IdeaController', () => {
+  let mq: MessageQueue;
   let database: IdeaDatabase;
   let useCases: IdeaUseCases;
   let controller: IdeaController;
@@ -15,9 +17,10 @@ describe('IdeaController', () => {
   beforeAll(() => {
     const databaseName: string = (global as any).__MONGO_DB_NAME__;
     const databaseUrl: string = (global as any).__MONGO_URI__;
+    mq = new MessageQueue();
     database = new IdeaDatabase(databaseName, databaseUrl);
     useCases = new IdeaUseCases(database, makeIdea);
-    controller = new IdeaController(useCases);
+    controller = new IdeaController(useCases, mq);
   });
 
   afterAll(async () => {
@@ -42,7 +45,7 @@ describe('IdeaController', () => {
       let fakeUseCases: IdeaUseCases = new IdeaUseCases(database, (_payload: Idea) => {
         throw Error('💥');
       });
-      let fakeController: IdeaController = new IdeaController(fakeUseCases);
+      let fakeController: IdeaController = new IdeaController(fakeUseCases, mq);
       const request: HttpRequest = { body: makeFakeIdea() };
       const expected: HttpResponse = {
         status: HttpStatusCodes.BadRequest,

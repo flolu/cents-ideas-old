@@ -14,7 +14,7 @@ const { logger } = env;
 const mq = new MessageQueue();
 const database = new IdeaDatabase();
 const useCases = new IdeaUseCases(database, makeIdea);
-const controller = new IdeaController(useCases);
+const controller = new IdeaController(useCases, mq);
 
 const rpcJsonAdapter = (rpcName: RpcIdeaNames, controller: Function) => {
   mq.reply(rpcName, async (message: Message, respond: Function) => {

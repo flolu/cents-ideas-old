@@ -1,19 +1,24 @@
-import { Idea } from '@cents-ideas/types';
-import { IdeaUseCases } from './idea-use-cases';
-import { HttpRequest, HttpResponse } from '@cents-ideas/types';
+import { HttpRequest, HttpResponse, Idea } from '@cents-ideas/types';
 import { HttpStatusCodes } from '@cents-ideas/enums';
+import { MessageQueue } from '@cents-ideas/utils';
+
+import { IdeaUseCases } from './idea-use-cases';
 
 import env from './environment';
 const { logger } = env;
 const loggerPrefix: string = 'controller ->';
 
 export class IdeaController {
-  constructor(private useCases: IdeaUseCases) {}
+  constructor(private useCases: IdeaUseCases, private mq: MessageQueue) {}
 
   public create = async (request: HttpRequest): Promise<HttpResponse<{ created?: Idea }>> => {
     try {
       logger.debug(loggerPrefix, 'create', request);
       const created: Idea = await this.useCases.add(request.body);
+      if (false) {
+        // TODO message queue events
+        this.mq.publish('idea created', created);
+      }
       return {
         status: HttpStatusCodes.Created,
         body: { created },

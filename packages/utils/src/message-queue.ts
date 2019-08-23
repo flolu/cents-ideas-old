@@ -1,11 +1,12 @@
 import * as amqp from 'amqplib/callback_api';
-import { Connection, Message } from 'amqplib/callback_api';
+import { Connection, Message, Channel } from 'amqplib/callback_api';
 
 import { Logger } from './logger';
 const logger = new Logger('🐍  ');
 
 export class MessageQueue {
   private connection: Connection | undefined;
+  private channel: Channel | undefined;
 
   constructor(
     private url: string = `amqp://${process.env.RABBIT_MQ_USER || 'rabbitmq'}:${process.env
@@ -126,62 +127,54 @@ export class MessageQueue {
       }
     });
 
-  // TODO reactivate
-  /*  publish = async (queue: string, message: object) => {
+  publish = async (queue: string, message: object) => {
+    const loggerPrefix: string = 'publish -> ';
     await this.createChannel();
-    this.channel.assertQueue(queue, { durable: true });
-    this.channel.sendToQueue(queue, Buffer.from(JSON.stringify(message)));
+    if (this.channel) {
+      logger.debug(loggerPrefix, 'publish message to queue: ', queue);
+      this.channel.assertQueue(queue, { durable: true });
+      this.channel.sendToQueue(queue, Buffer.from(JSON.stringify(message)));
+    }
   };
 
-  // TODO maybe return observable
   subscribe = async (
     queue: string,
     callback: (message: Message | any) => void,
     fullMessage: boolean = false
   ) => {
+    const loggerPrefix: string = 'subscribe -> ';
     await this.createChannel();
-    this.channel.assertQueue(queue, { durable: true });
-    this.channel.consume(
-      queue,
-      (message: Message | null) => {
-        if (message) {
-          callback(fullMessage ? message : JSON.parse(message.content.toString()));
-          this.channel.ack(message);
-        }
-      },
-      { noAck: false }
-    );
+    if (this.channel) {
+      logger.debug(loggerPrefix, 'subscribe to queue: ', queue);
+      this.channel.assertQueue(queue, { durable: true });
+      this.channel.consume(
+        queue,
+        (message: Message | null) => {
+          if (message) {
+            callback(fullMessage ? message : JSON.parse(message.content.toString()));
+            this.channel && this.channel.ack(message);
+          }
+        },
+        { noAck: false }
+      );
+    }
   };
 
-   private connectAndCreateChannel = (): Promise<{ connection: Connection; channel: Channel }> =>
-    new Promise((resolve, reject) => {
-      amqp.connect(this.url, (err, connection) => {
-        if (err) {
-          return reject(err);
-        }
-        connection.createChannel((err, channel) => {
-          if (err) {
-            return reject(err);
-          }
-          return resolve({ connection, channel });
-        });
-      });
-    });
-
-    private createChannel = (): Promise<Channel> =>
+  private createChannel = (): Promise<Channel> =>
     new Promise(async (resolve, reject) => {
       if (this.channel) {
         return resolve(this.channel);
       }
       await this.connect();
-      this.connection.createChannel((err: any, channel: Channel) => {
-        if (err) {
-          return reject(err);
-        } else {
-          this.channel = channel;
-          return resolve(channel);
-        }
-      });
+      this.connection &&
+        this.connection.createChannel((err: any, channel: Channel) => {
+          if (err) {
+            return reject(err);
+          } else {
+            this.channel = channel;
+            return resolve(channel);
+          }
+        });
     });
 
   private connect = async (): Promise<Connection> =>
@@ -197,5 +190,5 @@ export class MessageQueue {
       } else {
         return resolve(this.connection);
       }
-    });  */
+    });
 }
