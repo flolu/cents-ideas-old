@@ -9,7 +9,10 @@ const loggerPrefix: string = 'database ->';
 export class IdeaDatabase {
   private readonly COLLECTION_NAME: string = env.database.ideasCollectionName;
 
-  private client: MongoClient = new MongoClient(this.url, { useNewUrlParser: true });
+  private client: MongoClient = new MongoClient(this.url, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true
+  });
 
   constructor(private name: string = env.database.name, private url: string = env.database.url) {
     this.client.connect();
@@ -49,12 +52,16 @@ export class IdeaDatabase {
     return { id, ...inserted };
   };
 
-  public findById = async (id: string): Promise<Idea> => {
-    logger.debug(loggerPrefix, 'find idea by id', id);
+  public findById = async (ideaId: string): Promise<Idea> => {
+    logger.debug(loggerPrefix, 'find idea by id', ideaId);
     const database: Db = await this.makeDatabase();
-    const result = await database.collection(this.COLLECTION_NAME).findOne({ _id: id });
-    logger.debug(loggerPrefix, 'found idea by id', id);
-    return result;
+    const result = await database.collection(this.COLLECTION_NAME).findOne({ _id: ideaId });
+    if (!result) {
+      throw new Error('Idea not found');
+    }
+    logger.debug(loggerPrefix, 'found idea by id', ideaId);
+    const { _id: id, ...data } = result;
+    return { id, ...data };
   };
 
   public findAll = async (): Promise<Idea[]> => {
@@ -62,6 +69,7 @@ export class IdeaDatabase {
     const database: Db = await this.makeDatabase();
     const result = await database.collection(this.COLLECTION_NAME).find({});
     logger.debug(loggerPrefix, 'found all ideas');
-    return result.toArray();
+    const arr = await result.toArray();
+    return arr.map(({ _id: id, ...i }) => ({ id, ...i }));
   };
 }

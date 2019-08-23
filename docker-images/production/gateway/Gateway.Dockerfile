@@ -4,6 +4,7 @@ WORKDIR /usr/app/src
 
 COPY ./packages/utils ./packages/utils
 COPY ./packages/types ./packages/types
+COPY ./packages/enums ./packages/enums
 COPY ./services/gateway ./services/gateway
 
 COPY package.json .

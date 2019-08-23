@@ -1,12 +1,14 @@
 import * as faker from 'faker';
 
-import { makeUniqueId } from '@cents-ideas/utils';
+import { Identifier } from '@cents-ideas/utils';
 import { Idea } from '@cents-ideas/types';
+
+const identifier = new Identifier();
 
 const makeFakeIdea = (overrides: Partial<Idea> = {}): Idea => {
   const idea: Idea = {
-    id: makeUniqueId(),
-    userId: makeUniqueId(),
+    id: identifier.makeUniqueId(),
+    userId: identifier.makeUniqueId(),
     title: faker.lorem.words(5),
     description: faker.lorem.paragraphs(3),
     createdAt: new Date().toUTCString(),

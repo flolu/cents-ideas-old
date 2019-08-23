@@ -1,12 +1,15 @@
+import { MessageQueue } from '@cents-ideas/utils';
 import { HttpRequest, HttpResponse, Idea } from '@cents-ideas/types';
-import { HttpStatusCodes } from '@cents-ideas/utils';
-import makeIdea from './idea';
+import { HttpStatusCodes } from '@cents-ideas/enums';
+
+import makeIdea, { IdeaErrors } from './idea';
 import { IdeaController } from './idea-controllers';
 import { IdeaDatabase } from './idea-database';
 import { IdeaUseCases } from './idea-use-cases';
 import makeFakeIdea from './test/idea.mock';
 
 describe('IdeaController', () => {
+  let mq: MessageQueue;
   let database: IdeaDatabase;
   let useCases: IdeaUseCases;
   let controller: IdeaController;
@@ -14,9 +17,10 @@ describe('IdeaController', () => {
   beforeAll(() => {
     const databaseName: string = (global as any).__MONGO_DB_NAME__;
     const databaseUrl: string = (global as any).__MONGO_URI__;
+    mq = new MessageQueue();
     database = new IdeaDatabase(databaseName, databaseUrl);
     useCases = new IdeaUseCases(database, makeIdea);
-    controller = new IdeaController(useCases);
+    controller = new IdeaController(useCases, mq);
   });
 
   afterAll(async () => {
@@ -30,13 +34,39 @@ describe('IdeaController', () => {
       const request: HttpRequest = { body: idea };
       const expected: HttpResponse<{ created: Idea }> = {
         body: { created: idea },
-        status: HttpStatusCodes.CREATED,
+        status: HttpStatusCodes.Created,
         error: false
+      };
+      const actual: HttpResponse = await controller.create(request);
+      expect(actual).toEqual(expected);
+    });
+
+    it('reports user errors', async () => {
+      let fakeUseCases: IdeaUseCases = new IdeaUseCases(database, (_payload: Idea) => {
+        throw Error('💥');
+      });
+      let fakeController: IdeaController = new IdeaController(fakeUseCases, mq);
+      const request: HttpRequest = { body: makeFakeIdea() };
+      const expected: HttpResponse = {
+        status: HttpStatusCodes.BadRequest,
+        error: '💥',
+        body: {}
+      };
+      const actual: HttpResponse = await fakeController.create(request);
+      expect(actual).toEqual(expected);
+    });
+
+    it('recognizes wrong payload', async () => {
+      const request: HttpRequest = { body: { ...makeFakeIdea(), title: '' } };
+      const expected: HttpResponse = {
+        status: HttpStatusCodes.BadRequest,
+        error: IdeaErrors.TitleRequired,
+        body: {}
       };
       const actual: HttpResponse = await controller.create(request);
       expect(actual).toEqual(expected);
     });
   });
 
-  // TODO other tests
+  // FIXME other tests
 });

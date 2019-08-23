@@ -3,6 +3,7 @@
   "references": [
     { "path": "packages/utils" },
     { "path": "packages/types" },
+    { "path": "packages/enums" },
     { "path": "services/gateway" },
     { "path": "services/ideas" }
   ]

@@ -7,6 +7,8 @@
   ],
   "scripts": {
     "clear": "rimraf **/dist",
+    "clear-node_modules": "rimraf **/node_modules",
+    "clear-all": "yarn clear && yarn clear-node_modules",
     "bootstrap": "yarn install && yarn run build",
     "tsc": "tsc",
     "build": "tsc --build",
