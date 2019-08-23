@@ -21,5 +21,18 @@ describe('IdeaUseCases', () => {
     expect(inserted).toEqual(idea);
   });
 
-  // TODO other tests
+  it('gets one idea from the database', async () => {
+    const idea: Idea = makeFakeIdea();
+    const inserted: Idea = await database.insert(idea);
+    expect(inserted).toEqual(idea);
+  });
+
+  it('gets all ideas from the database', async () => {
+    const idea1 = makeFakeIdea();
+    const idea2 = makeFakeIdea();
+    await Promise.all([idea1, idea2].map(database.insert));
+    const found: Idea[] = await database.findAll();
+    expect(found).toContainEqual(idea1);
+    expect(found).toContainEqual(idea2);
+  });
 });

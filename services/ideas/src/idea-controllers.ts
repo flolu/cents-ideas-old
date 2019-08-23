@@ -21,9 +21,10 @@ export class IdeaController {
         error: false
       };
     } catch (error) {
+      // FIXME find a way to handle expected errors
       logger.error(loggerPrefix, 'error in create', error);
       return {
-        status: HttpStatusCodes.InternalServerError,
+        status: HttpStatusCodes.BadRequest,
         body: {},
         error: error.message
       };
@@ -34,15 +35,24 @@ export class IdeaController {
     try {
       logger.debug(loggerPrefix, 'getOne', request);
       const found: Idea = await this.useCases.getOne(request.params.id);
-      return {
-        status: 201,
-        body: { found },
-        error: false
-      };
+      if (found) {
+        return {
+          status: HttpStatusCodes.Ok,
+          body: { found },
+          error: false
+        };
+      } else {
+        return {
+          status: HttpStatusCodes.NotFound,
+          body: {},
+          // FIXME unify error messages with enum or so?
+          error: 'Idea not found'
+        };
+      }
     } catch (error) {
       logger.error(loggerPrefix, 'error in getOne', error);
       return {
-        status: 500,
+        status: HttpStatusCodes.BadRequest,
         body: {},
         error: error.message
       };
@@ -61,7 +71,7 @@ export class IdeaController {
     } catch (error) {
       logger.error(loggerPrefix, 'error in getAll', error);
       return {
-        status: 500,
+        status: HttpStatusCodes.BadRequest,
         body: {},
         error: error.message
       };
