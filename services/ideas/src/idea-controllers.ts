@@ -1,6 +1,5 @@
 import { HttpRequest, HttpResponse, Idea } from '@cents-ideas/types';
 import { HttpStatusCodes } from '@cents-ideas/enums';
-import { MessageQueue } from '@cents-ideas/utils';
 
 import { IdeaUseCases } from './idea-use-cases';
 
@@ -9,7 +8,7 @@ const { logger } = env;
 const loggerPrefix: string = 'controller ->';
 
 export class IdeaController {
-  constructor(private useCases: IdeaUseCases, private mq: MessageQueue) {}
+  constructor(private useCases: IdeaUseCases) {}
 
   public create = async (request: HttpRequest): Promise<HttpResponse<{ created?: Idea }>> => {
     try {
@@ -17,7 +16,7 @@ export class IdeaController {
       const created: Idea = await this.useCases.add(request.body);
       if (false) {
         // TODO message queue events
-        this.mq.publish('idea created', created);
+        //this.mq.publish('idea created', created);
       }
       return {
         status: HttpStatusCodes.Created,

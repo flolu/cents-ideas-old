@@ -1,16 +1,14 @@
 import * as express from 'express';
 import bodyParser = require('body-parser');
 
-import { MessageQueue } from '@cents-ideas/utils';
-import { RpcIdeaNames, HttpStatusCodes } from '@cents-ideas/enums';
+import { HttpStatusCodes, Commands, Queries } from '@cents-ideas/enums';
 
 import env from './environment';
 import { ExpressAdapter } from './express-adapter';
 
 const { logger } = env;
-const mq = new MessageQueue();
-const expressAdapter = new ExpressAdapter(mq);
-const port: number = env.port;
+const expressAdapter = new ExpressAdapter();
+const port: number = env.port || 3000;
 const app = express();
 const ideasApiRoot: string = '/ideas';
 
@@ -20,9 +18,21 @@ const ideasApiRoot: string = '/ideas';
 
 app.use(bodyParser.json());
 
-app.get(`${ideasApiRoot}/create`, expressAdapter.makeJsonAdapter(RpcIdeaNames.Create));
-app.get(`${ideasApiRoot}/:id`, expressAdapter.makeJsonAdapter(RpcIdeaNames.GetOne));
-app.get(`${ideasApiRoot}`, expressAdapter.makeJsonAdapter(RpcIdeaNames.GetAll));
+// NEXT env vars
+const ideasHost: string = 'http://ideas:3000';
+
+app.post(
+  `${ideasApiRoot}`,
+  expressAdapter.makeJsonAdapter(`${ideasHost}/commands/${Commands.Ideas.Create}`)
+);
+app.get(
+  `${ideasApiRoot}/:id`,
+  expressAdapter.makeJsonAdapter(`${ideasHost}/queries/${Queries.Ideas.GetOne}`)
+);
+app.get(
+  `${ideasApiRoot}`,
+  expressAdapter.makeJsonAdapter(`${ideasHost}/queries/${Queries.Ideas.GetAll}`)
+);
 
 app.get('**', (_req, res) => res.status(HttpStatusCodes.NotFound).send());
 app.listen(port, () => logger.info('gateway listening on internal port', port));

@@ -1,8 +1,8 @@
-import { Message } from 'amqplib';
+import * as express from 'express';
+import bodyParser = require('body-parser');
 
 import { HttpRequest, HttpResponse } from '@cents-ideas/types';
-import { MessageQueue } from '@cents-ideas/utils';
-import { RpcIdeaNames } from '@cents-ideas/enums';
+import { Queries, Commands } from '@cents-ideas/enums';
 
 import { IdeaController } from './idea-controllers';
 import { IdeaUseCases } from './idea-use-cases';
@@ -11,21 +11,26 @@ import env from './environment';
 import makeIdea from './idea';
 
 const { logger } = env;
-const mq = new MessageQueue();
 const database = new IdeaDatabase();
 const useCases = new IdeaUseCases(database, makeIdea);
-const controller = new IdeaController(useCases, mq);
+const controller = new IdeaController(useCases);
+const port: number = 3000;
+const app = express();
 
-const rpcJsonAdapter = (rpcName: RpcIdeaNames, controller: Function) => {
-  mq.reply(rpcName, async (message: Message, respond: Function) => {
-    const httpRequest: HttpRequest = JSON.parse(message.content.toString());
-    logger.info(rpcName);
+app.use(bodyParser.json());
+
+const expressJsonAdapter = (controller: Function) => {
+  return async (req: express.Request, res: express.Response) => {
+    const httpRequest: HttpRequest = req.body;
+    logger.info(req.path);
     const response: HttpResponse = await controller(httpRequest);
-    logger.info(rpcName, ' -> done');
-    respond(JSON.stringify(response));
-  });
+    logger.info(req.path, ' -> done');
+    res.json(response);
+  };
 };
 
-rpcJsonAdapter(RpcIdeaNames.Create, controller.create);
-rpcJsonAdapter(RpcIdeaNames.GetOne, controller.getOne);
-rpcJsonAdapter(RpcIdeaNames.GetAll, controller.getAll);
+app.post(`/commands/${Commands.Ideas.Create}`, expressJsonAdapter(controller.create));
+app.post(`/queries/${Queries.Ideas.GetOne}`, expressJsonAdapter(controller.getOne));
+app.post(`/queries/${Queries.Ideas.GetAll}`, expressJsonAdapter(controller.getAll));
+
+app.listen(port, () => logger.info('ideas service listening on internal port', port));

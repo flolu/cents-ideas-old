@@ -1,26 +1,21 @@
 import * as express from 'express';
+import axios from 'axios';
 
 import { HttpRequest, HttpResponse } from '@cents-ideas/types';
-import { MessageQueue } from '@cents-ideas/utils';
 
 import env from './environment';
 
 const { logger } = env;
 
 export class ExpressAdapter {
-  constructor(private messageQueue: MessageQueue) {}
-
   // FIXME timeout handler either here or in mq
-  public makeJsonAdapter = (rpcControllerName: string): express.RequestHandler => {
+  public makeJsonAdapter = (url: string): express.RequestHandler => {
     return async (req: express.Request, res: express.Response) => {
       const httpRequest: HttpRequest = this.makeHttpRequestFromExpressRequest(req);
-      logger.info(rpcControllerName);
-      const response: string = await this.messageQueue.request(
-        rpcControllerName,
-        JSON.stringify(httpRequest)
-      );
-      const httpResponse: HttpResponse = JSON.parse(response);
-      logger.info(rpcControllerName, ' -> done');
+      logger.info(url);
+      const response = await axios.post(url, httpRequest);
+      const httpResponse: HttpResponse = response.data;
+      logger.info(url, ' -> done');
       this.handleExpressHttpResponse(res, httpResponse);
     };
   };
