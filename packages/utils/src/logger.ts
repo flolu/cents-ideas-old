@@ -14,18 +14,22 @@ export class Logger {
   }
 
   public info = (message: string, ...args: any[]) => {
-    this.logger.info(this.prefix, message, ...args);
+    this.logger.info(this._prefix, message, ...args);
   };
 
   public debug = (message: string, ...args: any[]) => {
-    this.logger.debug(this.prefix, message, ...args);
+    this.logger.debug(this._prefix, message, ...args);
   };
 
   public warn = (message: string, ...args: any[]) => {
-    this.logger.warn(message, this.prefix, ...args);
+    this.logger.warn(message, this._prefix, ...args);
   };
 
   public error = (message: string, ...args: any[]) => {
-    this.logger.error(this.prefix, message, ...args);
+    this.logger.error(this._prefix, message, ...args);
   };
+
+  private get _prefix(): string {
+    return this.prefix + ' ';
+  }
 }

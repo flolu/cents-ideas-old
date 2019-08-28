@@ -36,3 +36,7 @@ app.post(`/queries/${Queries.Ideas.GetOne}`, expressJsonAdapter(controller.getOn
 app.post(`/queries/${Queries.Ideas.GetAll}`, expressJsonAdapter(controller.getAll));
 
 app.listen(port, () => logger.info('ideas service listening on internal port', port));
+
+import { Bus } from '@cents-ideas/utils';
+const bus = new Bus();
+bus.subscribe();

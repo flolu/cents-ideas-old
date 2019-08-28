@@ -11,7 +11,7 @@ const env = {
     name: process.env.NODE_ENV || 'test'
   },
   port: 3000,
-  logger: new Logger('💡 ')
+  logger: new Logger('💡')
 };
 
 export default env;

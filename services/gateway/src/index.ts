@@ -21,6 +21,13 @@ app.use(bodyParser.json());
 // NEXT env vars
 const ideasHost: string = 'http://ideas:3000';
 
+import { Bus } from '@cents-ideas/utils';
+const bus = new Bus();
+app.get('/kafka', (_req, res) => {
+  bus.publish();
+  return res.send('kafka');
+});
+
 app.post(
   `${ideasApiRoot}`,
   expressAdapter.makeJsonAdapter(`${ideasHost}/commands/${Commands.Ideas.Create}`)
