@@ -15,6 +15,12 @@ export class IdeaUseCases {
     return this.database.insert(idea);
   };
 
+  update = async (payload: any): Promise<Idea> => {
+    logger.debug(loggerPrefix, 'update');
+    const current: Idea = await this.database.findById(payload.id);
+    return this.database.updateOne(current.id, { ...current, ...payload });
+  };
+
   getOne = (id: string): Promise<Idea> => {
     logger.debug(loggerPrefix, 'getOne');
     return this.database.findById(id);

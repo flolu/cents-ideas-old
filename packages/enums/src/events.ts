@@ -1,5 +1,6 @@
 enum IdeaCommands {
-  Create = 'create'
+  Create = 'create',
+  Update = 'update'
 }
 enum IdeaQueries {
   GetOne = 'get-one',

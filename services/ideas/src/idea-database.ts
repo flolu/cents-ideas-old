@@ -52,6 +52,19 @@ export class IdeaDatabase {
     return { id, ...inserted };
   };
 
+  public updateOne = async (ideaId: string, payload: Partial<Idea>): Promise<Idea> => {
+    logger.debug(loggerPrefix, 'update', ideaId, 'in', this.name);
+    const database: Db = await this.makeDatabase();
+    await database
+      .collection(this.COLLECTION_NAME)
+      .updateOne(
+        { _id: ideaId },
+        { $set: { title: payload.title, description: payload.description } }
+      );
+    logger.debug(loggerPrefix, 'updated', ideaId, 'inside', this.name);
+    return this.findById(ideaId);
+  };
+
   public findById = async (ideaId: string): Promise<Idea> => {
     logger.debug(loggerPrefix, 'find idea by id', ideaId);
     const database: Db = await this.makeDatabase();

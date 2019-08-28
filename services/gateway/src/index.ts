@@ -25,6 +25,10 @@ app.post(
   `${ideasApiRoot}`,
   expressAdapter.makeJsonAdapter(`${ideasHost}/commands/${Commands.Ideas.Create}`)
 );
+app.put(
+  `${ideasApiRoot}`,
+  expressAdapter.makeJsonAdapter(`${ideasHost}/commands/${Commands.Ideas.Update}`)
+);
 app.get(
   `${ideasApiRoot}/:id`,
   expressAdapter.makeJsonAdapter(`${ideasHost}/queries/${Queries.Ideas.GetOne}`)

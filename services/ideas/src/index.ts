@@ -30,6 +30,8 @@ const expressJsonAdapter = (controller: Function) => {
 };
 
 app.post(`/commands/${Commands.Ideas.Create}`, expressJsonAdapter(controller.create));
+app.post(`/commands/${Commands.Ideas.Update}`, expressJsonAdapter(controller.update));
+
 app.post(`/queries/${Queries.Ideas.GetOne}`, expressJsonAdapter(controller.getOne));
 app.post(`/queries/${Queries.Ideas.GetAll}`, expressJsonAdapter(controller.getAll));
 

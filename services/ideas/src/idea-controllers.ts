@@ -14,10 +14,6 @@ export class IdeaController {
     try {
       logger.debug(loggerPrefix, 'create', request);
       const created: Idea = await this.useCases.add(request.body);
-      if (false) {
-        // TODO message queue events
-        //this.mq.publish('idea created', created);
-      }
       return {
         status: HttpStatusCodes.Created,
         body: { created },
@@ -26,6 +22,27 @@ export class IdeaController {
     } catch (error) {
       // FIXME find a way to handle expected errors
       logger.error(loggerPrefix, 'error in create: ', error.message);
+      return {
+        status: HttpStatusCodes.BadRequest,
+        body: {},
+        error: error.message
+      };
+    }
+  };
+
+  public update = async (request: HttpRequest): Promise<HttpResponse<{ updated?: Idea }>> => {
+    try {
+      logger.debug(loggerPrefix, 'update', request);
+      // NEXT check if request payload is valid
+      const updated: Idea = await this.useCases.update(request.body);
+      return {
+        status: HttpStatusCodes.Created,
+        body: { updated },
+        error: false
+      };
+    } catch (error) {
+      // FIXME find a way to handle expected errors
+      logger.error(loggerPrefix, 'error in update: ', error.message);
       return {
         status: HttpStatusCodes.BadRequest,
         body: {},

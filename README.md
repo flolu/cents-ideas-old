@@ -42,5 +42,11 @@ curl --header "Content-Type: application/json" --request POST --data '{"userId":
 curl --header "Content-Type: application/json" --request POST --data '{"userId":"fake-id-34543", "title":"Dumb idea title", "description":"lorem ipsum" }' http://localhost:3000/ideas
 ```
 
+### Update idea
+
+```
+curl --header "Content-Type: application/json" --request PUT --data '{"id":"I4SOa7_4C", "title":"Updated title :)"}' http://localhost:3000/ideas
+```
+
 // FIXME create script to automatically build, tag and push docker images
 // TODO better way of supplying k8s pods with env vars
